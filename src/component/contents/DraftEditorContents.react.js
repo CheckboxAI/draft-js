@@ -49,6 +49,22 @@ class DraftEditorContents extends React.Component<Props> {
     const prevDirectionMap = prevEditorState.getDirectionMap();
     const nextDirectionMap = nextEditorState.getDirectionMap();
 
+    const prevContent = prevEditorState.getCurrentContent();
+    const nextContent = nextEditorState.getCurrentContent();
+   
+    const prevFocusKey = prevEditorState.getSelection().getFocusKey();
+    const nextFocusKey = nextEditorState.getSelection().getFocusKey();
+   
+    const prevFocusBlock = prevFocusKey ? prevContent.getBlockForKey(prevFocusKey) : null;
+    const nextFocusBlock = nextFocusKey ? nextContent.getBlockForKey(nextFocusKey) : null;
+   
+    const prevFocusBlockType = prevFocusBlock.getData().get('type');
+    const nextFocusBlockType = nextFocusBlock.getData().get('type');
+   
+    if (prevFocusBlockType !== nextFocusBlockType) {
+      return true;
+    } 
+
     // Text direction has changed for one or more blocks. We must re-render.
     if (prevDirectionMap !== nextDirectionMap) {
       return true;
