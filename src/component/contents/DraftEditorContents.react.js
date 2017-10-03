@@ -43,6 +43,8 @@ type Props = {
  */
 class DraftEditorContents extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
+    console.log('%DraftEditorContents.shouldComponentUpdate()', 'color: blue');
+    
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
 
@@ -58,8 +60,8 @@ class DraftEditorContents extends React.Component<Props> {
     const prevFocusBlock = prevFocusKey ? prevContent.getBlockForKey(prevFocusKey) : null;
     const nextFocusBlock = nextFocusKey ? nextContent.getBlockForKey(nextFocusKey) : null;
    
-    const prevFocusBlockType = prevFocusBlock.getData().get('type');
-    const nextFocusBlockType = nextFocusBlock.getData().get('type');
+    const prevFocusBlockType = prevFocusBlock.getData().get('location');
+    const nextFocusBlockType = nextFocusBlock.getData().get('location');
    
     if (prevFocusBlockType !== nextFocusBlockType) {
       return true;
@@ -95,8 +97,6 @@ class DraftEditorContents extends React.Component<Props> {
       return false;
     }
 
-    const prevContent = prevEditorState.getCurrentContent();
-    const nextContent = nextEditorState.getCurrentContent();
     const prevDecorator = prevEditorState.getDecorator();
     const nextDecorator = nextEditorState.getDecorator();
     return (
