@@ -43,7 +43,7 @@ type Props = {
  */
 class DraftEditorContents extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
-    console.log('%DraftEditorContents.shouldComponentUpdate()', 'color: blue');
+    console.log('%cDraftEditorContents.shouldComponentUpdate()', 'color: blue');
     
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -108,6 +108,7 @@ class DraftEditorContents extends React.Component<Props> {
   }
 
   render(): React.Node {
+    console.log('%cDraftEditorContents.render()', 'color: blue');
     const {
       /* $FlowFixMe(>=0.53.0 site=www,mobile) This comment suppresses an error
        * when upgrading Flow's support for React. Common errors found when
