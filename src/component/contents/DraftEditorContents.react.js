@@ -56,12 +56,12 @@ class DraftEditorContents extends React.Component<Props> {
    
     const prevFocusKey = prevEditorState.getSelection().getFocusKey();
     const nextFocusKey = nextEditorState.getSelection().getFocusKey();
-   
+
     const prevFocusBlock = prevFocusKey ? prevContent.getBlockForKey(prevFocusKey) : null;
     const nextFocusBlock = nextFocusKey ? nextContent.getBlockForKey(nextFocusKey) : null;
-   
-    const prevFocusBlockType = prevFocusBlock.getData().get('location');
-    const nextFocusBlockType = nextFocusBlock.getData().get('location');
+
+    const prevFocusBlockType = prevFocusBlock ? prevFocusBlock.getData().get('location') : null;
+    const nextFocusBlockType = nextFocusBlock ? nextFocusBlock.getData().get('location') : null;
    
     if (prevFocusBlockType !== nextFocusBlockType) {
       return true;

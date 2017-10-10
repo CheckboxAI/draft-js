@@ -7145,8 +7145,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var prevFocusBlock = prevFocusKey ? prevContent.getBlockForKey(prevFocusKey) : null;
 	    var nextFocusBlock = nextFocusKey ? nextContent.getBlockForKey(nextFocusKey) : null;
 
-	    var prevFocusBlockType = prevFocusBlock.getData().get('location');
-	    var nextFocusBlockType = nextFocusBlock.getData().get('location');
+	    var prevFocusBlockType = prevFocusBlock ? prevFocusBlock.getData().get('location') : null;
+	    var nextFocusBlockType = nextFocusBlock ? nextFocusBlock.getData().get('location') : null;
 
 	    if (prevFocusBlockType !== nextFocusBlockType) {
 	      return true;
