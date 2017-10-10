@@ -140,8 +140,7 @@ class DraftEditorContents extends React.Component<Props> {
     let currentDepth = null;
     let lastWrapperTemplate = null;
 
-    for (let ii = 0; ii < blocksAsArray.length; ii++) {
-      const block = blocksAsArray[ii];
+    blocksAsArray.forEach((block) => {
       const key = block.getKey();
       const blockType = block.getType();
 
@@ -236,6 +235,7 @@ class DraftEditorContents extends React.Component<Props> {
         wrapperTemplate,
         key,
         offsetKey,
+        location: block.getData().get('location'),
       });
 
       if (wrapperTemplate) {
@@ -244,13 +244,17 @@ class DraftEditorContents extends React.Component<Props> {
         currentDepth = null;
       }
       lastWrapperTemplate = wrapperTemplate;
-    }
+    });
 
     // Group contiguous runs of blocks that have the same wrapperTemplate
     const outputBlocks = [];
+    const footerBlocks = [];
     for (let ii = 0; ii < processedBlocks.length; ) {
       const info = processedBlocks[ii];
-      if (info.wrapperTemplate) {
+      if (info.location === 'footer') {
+        footerBlocks.push(info.block);
+        ii++;
+      } else if (info.wrapperTemplate) {
         const blocks = [];
         do {
           blocks.push(processedBlocks[ii].block);
@@ -274,7 +278,12 @@ class DraftEditorContents extends React.Component<Props> {
       }
     }
 
-    return <div data-contents="true">{outputBlocks}</div>;
+    return (
+      <div data-contents="true">
+        {outputBlocks}
+        <div className="draftFooter">{footerBlocks}</div>
+      </div>
+    );
   }
 }
 
