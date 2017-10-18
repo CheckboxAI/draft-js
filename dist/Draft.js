@@ -7128,8 +7128,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  DraftEditorContents.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-	    console.log('%cDraftEditorContents.shouldComponentUpdate()', 'color: blue');
-
 	    var prevEditorState = this.props.editorState;
 	    var nextEditorState = nextProps.editorState;
 
@@ -7183,7 +7181,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  DraftEditorContents.prototype.render = function render() {
 	    var _this2 = this;
 
-	    console.log('%cDraftEditorContents.render()', 'color: blue');
 	    var _props = this.props,
 	        blockRenderMap = _props.blockRenderMap,
 	        blockRendererFn = _props.blockRendererFn,
