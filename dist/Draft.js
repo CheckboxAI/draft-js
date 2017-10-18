@@ -689,17 +689,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function lookUpwardForInlineStyle(content, fromKey) {
-	  var previousBlock = content.getBlockBefore(fromKey);
-	  var previousLength;
+	  var lastNonEmpty = content.getBlockMap().reverse().skipUntil(function (_, k) {
+	    return k === fromKey;
+	  }).skip(1).skipUntil(function (block, _) {
+	    return block.getLength();
+	  }).first();
 
-	  while (previousBlock) {
-	    previousLength = previousBlock.getLength();
-	    if (previousLength) {
-	      return previousBlock.getInlineStyleAt(previousLength - 1);
-	    }
-	    previousBlock = content.getBlockBefore(previousBlock.getKey());
-	  }
-
+	  if (lastNonEmpty) return lastNonEmpty.getInlineStyleAt(lastNonEmpty.getLength() - 1);
 	  return OrderedSet();
 	}
 
@@ -4144,9 +4140,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  /**
-	   * When a collapsed cursor is at the start of an empty styled block, 
-	   * changes block to 'unstyled'. Returns null if block or selection does not
-	   * meet that criteria.
+	   * When a collapsed cursor is at the start of the first styled block, or 
+	   * an empty styled block, changes block to 'unstyled'. Returns null if 
+	   * block or selection does not meet that criteria.
 	   */
 	  tryToRemoveBlockStyle: function tryToRemoveBlockStyle(editorState) {
 	    var selection = editorState.getSelection();
@@ -4155,7 +4151,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var key = selection.getAnchorKey();
 	      var content = editorState.getCurrentContent();
 	      var block = content.getBlockForKey(key);
-	      if (block.getLength() > 0) {
+
+	      var firstBlock = content.getFirstBlock();
+	      if (block.getLength() > 0 && block !== firstBlock) {
 	        return null;
 	      }
 
@@ -6753,6 +6751,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var alreadyHasFocus = editorState.getSelection().getHasFocus();
 	    var editorNode = ReactDOM.findDOMNode(this.refs.editor);
 
+	    if (!editorNode) {
+	      // once in a while people call 'focus' in a setTimeout, and the node has
+	      // been deleted, so it can be null in that case.
+	      return;
+	    }
+
 	    var scrollParent = Style.getScrollParent(editorNode);
 
 	    var _ref = scrollPosition || getScrollPosition(scrollParent),
@@ -8721,11 +8725,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // reduces re-renders and preserves spellcheck highlighting. If the selection
 	  // is not collapsed, we will re-render.
 	  var selection = editorState.getSelection();
+	  var selectionStart = selection.getStartOffset();
+	  var selectionEnd = selection.getEndOffset();
 	  var anchorKey = selection.getAnchorKey();
 
 	  if (!selection.isCollapsed()) {
 	    e.preventDefault();
-	    editor.update(replaceText(editorState, chars, editorState.getCurrentInlineStyle(), getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection())));
+
+	    // If the character that the user is trying to replace with
+	    // is the same as the current selection text the just update the
+	    // `SelectionState`.  Else, update the ContentState with the new text
+	    var currentlySelectedChars = editorState.getCurrentContent().getPlainText().slice(selectionStart, selectionEnd);
+	    if (chars === currentlySelectedChars) {
+	      this.update(EditorState.forceSelection(editorState, selection.merge({
+	        focusOffset: selectionEnd
+	      })));
+	    } else {
+	      editor.update(replaceText(editorState, chars, editorState.getCurrentInlineStyle(), getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection())));
+	    }
 	    return;
 	  }
 
