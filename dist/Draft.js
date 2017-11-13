@@ -7296,10 +7296,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Group contiguous runs of blocks that have the same wrapperTemplate
 	    var outputBlocks = [];
+	    var headerBlocks = [];
 	    var footerBlocks = [];
 	    for (var ii = 0; ii < processedBlocks.length;) {
 	      var info = processedBlocks[ii];
-	      if (info.location === 'footer') {
+	      if (info.location === 'header') {
+	        headerBlocks.push(info.block);
+	        ii++;
+	      } else if (info.location === 'footer') {
 	        footerBlocks.push(info.block);
 	        ii++;
 	      } else if (info.wrapperTemplate) {
@@ -7322,6 +7326,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return React.createElement(
 	      'div',
 	      { 'data-contents': 'true' },
+	      React.createElement(
+	        'div',
+	        { className: 'draftHeader' },
+	        headerBlocks
+	      ),
 	      outputBlocks,
 	      React.createElement(
 	        'div',
