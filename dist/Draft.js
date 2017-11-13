@@ -7528,7 +7528,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        { className: 'draftHeader' },
 	        headerBlocks
 	      ),
-	      outputBlocks,
+	      React.createElement(
+	        'div',
+	        { className: 'draftBody' },
+	        outputBlocks
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'draftFooter' },

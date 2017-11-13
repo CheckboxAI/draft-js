@@ -244,7 +244,7 @@ class DraftEditorContents extends React.Component<Props> {
 
     return <div data-contents="true">
         <div className="draftHeader">{headerBlocks}</div>
-        {outputBlocks}
+        <div className="draftBody">{outputBlocks}</div>
         <div className="draftFooter">{footerBlocks}</div>
       </div>;
   }
