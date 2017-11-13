@@ -7,13 +7,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule DraftEditorContents.react
- * @typechecks
+ * @format
  * @flow
  */
 
 'use strict';
 
-import type ContentBlock from 'ContentBlock';
+import type {BlockNodeRecord} from 'BlockNodeRecord';
 import type {BidiDirection} from 'UnicodeBidiDirection';
 
 const DraftEditorBlock = require('DraftEditorBlock.react');
@@ -27,7 +27,7 @@ const nullthrows = require('nullthrows');
 
 type Props = {
   blockRendererFn: Function,
-  blockStyleFn: (block: ContentBlock) => string,
+  blockStyleFn: (block: BlockNodeRecord) => string,
   editorState: EditorState,
   textDirectionality?: BidiDirection,
 };
@@ -86,10 +86,8 @@ class DraftEditorContents extends React.Component<Props> {
     // rendered state, there's nothing new to be done.
     if (
       prevEditorState === nextEditorState ||
-      (
-        nextNativeContent !== null &&
-        nextEditorState.getCurrentContent() === nextNativeContent
-      ) ||
+      (nextNativeContent !== null &&
+        nextEditorState.getCurrentContent() === nextNativeContent) ||
       (wasComposing && nowComposing)
     ) {
       return false;
@@ -169,16 +167,12 @@ class DraftEditorContents extends React.Component<Props> {
         tree: editorState.getBlockTree(key),
       };
 
-      const configForType = (
-        blockRenderMap.get(blockType) ||
-        blockRenderMap.get('unstyled')
-      );
+      const configForType =
+        blockRenderMap.get(blockType) || blockRenderMap.get('unstyled');
       const wrapperTemplate = configForType.wrapper;
 
-      const Element = (
-        configForType.element ||
-        blockRenderMap.get('unstyled').element
-      );
+      const Element =
+        configForType.element || blockRenderMap.get('unstyled').element;
 
       const depth = block.getDepth();
       let className = this.props.blockStyleFn(block);
@@ -186,11 +180,10 @@ class DraftEditorContents extends React.Component<Props> {
       // List items are special snowflakes, since we handle nesting and
       // counters manually.
       if (Element === 'li') {
-        const shouldResetCount = (
+        const shouldResetCount =
           lastWrapperTemplate !== wrapperTemplate ||
           currentDepth === null ||
-          depth > currentDepth
-        );
+          depth > currentDepth;
         className = joinClasses(
           className,
           getListItemClasses(blockType, depth, shouldResetCount, direction),
@@ -304,8 +297,7 @@ function getListItemClasses(
   return cx({
     'public/DraftStyleDefault/unorderedListItem':
       type === 'unordered-list-item',
-    'public/DraftStyleDefault/orderedListItem':
-      type === 'ordered-list-item',
+    'public/DraftStyleDefault/orderedListItem': type === 'ordered-list-item',
     'public/DraftStyleDefault/reset': shouldResetCount,
     'public/DraftStyleDefault/depth0': depth === 0,
     'public/DraftStyleDefault/depth1': depth === 1,

@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @emails isaac, oncall+ui_infra
+ * @emails oncall+ui_infra
+ * @format
  */
 
 jest.disableAutomock();
@@ -14,10 +15,7 @@ jest.disableAutomock();
 var getEntityKeyForSelection = require('getEntityKeyForSelection');
 var getSampleStateForTesting = require('getSampleStateForTesting');
 
-var {
-  contentState,
-  selectionState,
-} = getSampleStateForTesting();
+var {contentState, selectionState} = getSampleStateForTesting();
 
 selectionState = selectionState.merge({
   anchorKey: 'b',
@@ -36,7 +34,6 @@ describe('getEntityKeyForSelection', () => {
       focusOffset: 2,
     });
 
-
     it('must return null at start of block', () => {
       var key = getEntityKeyForSelection(contentState, selectionState);
       expect(key).toBe(null);
@@ -45,7 +42,7 @@ describe('getEntityKeyForSelection', () => {
     it('must return key if mutable', () => {
       setEntityMutability('MUTABLE');
       var key = getEntityKeyForSelection(contentState, collapsed);
-      expect(key).toBe('123');
+      expect(key).toBe('1');
     });
 
     it('must not return key if immutable', () => {
@@ -79,7 +76,7 @@ describe('getEntityKeyForSelection', () => {
     it('must return key if mutable', () => {
       setEntityMutability('MUTABLE');
       var key = getEntityKeyForSelection(contentState, nonCollapsed);
-      expect(key).toBe('123');
+      expect(key).toBe('1');
     });
 
     it('must not return key if immutable', () => {

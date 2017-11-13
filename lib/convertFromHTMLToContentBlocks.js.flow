@@ -7,12 +7,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule convertFromHTMLToContentBlocks
- * @typechecks
+ * @format
  * @flow
  */
 
 'use strict';
 
+import type { BlockNodeRecord } from './BlockNodeRecord';
 import type { DraftBlockRenderConfig } from './DraftBlockRenderConfig';
 import type { DraftBlockRenderMap } from './DraftBlockRenderMap';
 import type { DraftBlockType } from './DraftBlockType';
@@ -33,10 +34,7 @@ const invariant = require('fbjs/lib/invariant');
 const nullthrows = require('fbjs/lib/nullthrows');
 const sanitizeDraftText = require('./sanitizeDraftText');
 
-var {
-  List,
-  OrderedSet
-} = Immutable;
+var { List, OrderedSet } = Immutable;
 
 var NBSP = '&nbsp;';
 var SPACE = ' ';
@@ -430,10 +428,7 @@ function getChunkForHTML(html: string, DOMBuilder: Function, blockRenderMap: Dra
 
   // Start with -1 block depth to offset the fact that we are passing in a fake
   // UL block to start with.
-  var {
-    chunk,
-    entityMap: newEntityMap
-  } = genFragment(entityMap, safeBody, OrderedSet(), 'ul', null, workingBlocks, -1, blockRenderMap);
+  var { chunk, entityMap: newEntityMap } = genFragment(entityMap, safeBody, OrderedSet(), 'ul', null, workingBlocks, -1, blockRenderMap);
 
   // join with previous block to prevent weirdness on paste
   if (chunk.text.indexOf('\r') === 0) {
@@ -468,7 +463,7 @@ function getChunkForHTML(html: string, DOMBuilder: Function, blockRenderMap: Dra
   return { chunk, entityMap: newEntityMap };
 }
 
-function convertFromHTMLtoContentBlocks(html: string, DOMBuilder: Function = getSafeBodyFromHTML, blockRenderMap?: DraftBlockRenderMap = DefaultDraftBlockRenderMap): ?{ contentBlocks: ?Array<ContentBlock>; entityMap: EntityMap; } {
+function convertFromHTMLtoContentBlocks(html: string, DOMBuilder: Function = getSafeBodyFromHTML, blockRenderMap?: DraftBlockRenderMap = DefaultDraftBlockRenderMap): ?{ contentBlocks: ?Array<BlockNodeRecord>; entityMap: EntityMap; } {
   // Be ABSOLUTELY SURE that the dom builder you pass here won't execute
   // arbitrary code in whatever environment you're running this in. For an
   // example of how we try to do this in-browser, see getSafeBodyFromHTML.
@@ -480,10 +475,7 @@ function convertFromHTMLtoContentBlocks(html: string, DOMBuilder: Function = get
     return null;
   }
 
-  const {
-    chunk,
-    entityMap: newEntityMap
-  } = chunkData;
+  const { chunk, entityMap: newEntityMap } = chunkData;
 
   var start = 0;
   return {

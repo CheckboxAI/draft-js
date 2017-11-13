@@ -7,12 +7,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule AtomicBlockUtils
- * @typechecks
+ * @format
  * @flow
  */
 
 'use strict';
 
+import type { BlockNodeRecord } from './BlockNodeRecord';
 import type { DraftInsertionType } from './DraftInsertionType';
 
 const BlockMapBuilder = require('./BlockMapBuilder');
@@ -26,10 +27,7 @@ const SelectionState = require('./SelectionState');
 const generateRandomKey = require('./generateRandomKey');
 const moveBlockInContentState = require('./moveBlockInContentState');
 
-const {
-  List,
-  Repeat
-} = Immutable;
+const { List, Repeat } = Immutable;
 
 const AtomicBlockUtils = {
   insertAtomicBlock: function (editorState: EditorState, entityKey: string, character: string): EditorState {
@@ -70,7 +68,7 @@ const AtomicBlockUtils = {
     return EditorState.push(editorState, newContent, 'insert-fragment');
   },
 
-  moveAtomicBlock: function (editorState: EditorState, atomicBlock: ContentBlock, targetRange: SelectionState, insertionMode?: DraftInsertionType): EditorState {
+  moveAtomicBlock: function (editorState: EditorState, atomicBlock: BlockNodeRecord, targetRange: SelectionState, insertionMode?: DraftInsertionType): EditorState {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
 

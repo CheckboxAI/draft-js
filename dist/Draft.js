@@ -1,5 +1,5 @@
 /**
- * Draft v0.10.3
+ * Draft v0.10.4
  *
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17,7 +17,7 @@
 		exports["Draft"] = factory(require("immutable"), require("react"), require("react-dom"));
 	else
 		root["Draft"] = factory(root["Immutable"], root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_17__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_18__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -73,6 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule Draft
+	 * @format
 	 * 
 	 */
 
@@ -80,28 +81,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var AtomicBlockUtils = __webpack_require__(61);
 	var BlockMapBuilder = __webpack_require__(13);
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 	var CompositeDraftDecorator = __webpack_require__(62);
-	var ContentBlock = __webpack_require__(9);
+	var ContentBlock = __webpack_require__(10);
 	var ContentState = __webpack_require__(23);
 	var DefaultDraftBlockRenderMap = __webpack_require__(24);
 	var DefaultDraftInlineStyle = __webpack_require__(37);
-	var DraftEditor = __webpack_require__(64);
+	var DraftEditor = __webpack_require__(65);
 	var DraftEditorBlock = __webpack_require__(38);
-	var DraftEntity = __webpack_require__(18);
+	var DraftEntity = __webpack_require__(19);
 	var DraftModifier = __webpack_require__(4);
 	var DraftEntityInstance = __webpack_require__(39);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var KeyBindingUtil = __webpack_require__(25);
 	var RichTextEditorUtil = __webpack_require__(43);
 	var SelectionState = __webpack_require__(14);
 
-	var convertFromDraftStateToRaw = __webpack_require__(81);
+	var convertFromDraftStateToRaw = __webpack_require__(82);
 	var convertFromHTMLToContentBlocks = __webpack_require__(44);
-	var convertFromRawToDraftState = __webpack_require__(82);
+	var convertFromRawToDraftState = __webpack_require__(83);
 	var generateRandomKey = __webpack_require__(7);
 	var getDefaultKeyBinding = __webpack_require__(45);
-	var getVisibleSelectionRect = __webpack_require__(105);
+	var getVisibleSelectionRect = __webpack_require__(106);
 
 	var DraftPublic = {
 	  Editor: DraftEditor,
@@ -142,6 +143,64 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 *
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var validateFormat = function validateFormat(format) {};
+
+	if (true) {
+	  validateFormat = function validateFormat(format) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	}
+
+	module.exports = invariant;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
 	 * All rights reserved.
 	 *
 	 * This source code is licensed under the BSD-style license found in the
@@ -149,12 +208,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule EditorState
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -162,7 +222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var BlockTree = __webpack_require__(36);
 	var ContentState = __webpack_require__(23);
-	var EditorBidiService = __webpack_require__(76);
+	var EditorBidiService = __webpack_require__(77);
 	var Immutable = __webpack_require__(3);
 	var SelectionState = __webpack_require__(14);
 
@@ -702,64 +762,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = EditorState;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var validateFormat = function validateFormat(format) {};
-
-	if (true) {
-	  validateFormat = function validateFormat(format) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  };
-	}
-
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  validateFormat(format);
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	}
-
-	module.exports = invariant;
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -778,27 +780,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftModifier
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
-	var ContentStateInlineStyle = __webpack_require__(63);
+	var CharacterMetadata = __webpack_require__(5);
+	var ContentStateInlineStyle = __webpack_require__(64);
 	var DraftFeatureFlags = __webpack_require__(40);
 	var Immutable = __webpack_require__(3);
 
-	var applyEntityToContentState = __webpack_require__(80);
-	var getCharacterRemovalRange = __webpack_require__(101);
+	var applyEntityToContentState = __webpack_require__(81);
+	var getCharacterRemovalRange = __webpack_require__(102);
 	var getContentStateFragment = __webpack_require__(21);
-	var insertFragmentIntoContentState = __webpack_require__(106);
-	var insertTextIntoContentState = __webpack_require__(107);
-	var invariant = __webpack_require__(2);
-	var modifyBlockForContentState = __webpack_require__(118);
+	var insertFragmentIntoContentState = __webpack_require__(107);
+	var insertTextIntoContentState = __webpack_require__(108);
+	var invariant = __webpack_require__(1);
+	var modifyBlockForContentState = __webpack_require__(119);
 	var removeEntitiesAtEdges = __webpack_require__(56);
-	var removeRangeFromContentState = __webpack_require__(120);
-	var splitBlockInContentState = __webpack_require__(122);
+	var removeRangeFromContentState = __webpack_require__(121);
+	var splitBlockInContentState = __webpack_require__(123);
 
 	var OrderedSet = Immutable.OrderedSet;
 
@@ -932,30 +934,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 * 
-	 */
-
-	var nullthrows = function nullthrows(x) {
-	  if (x != null) {
-	    return x;
-	  }
-	  throw new Error("Got unexpected null or undefined");
-	};
-
-	module.exports = nullthrows;
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -967,7 +945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule CharacterMetadata
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -1046,7 +1024,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return EMPTY;
 	    }
 
-	    var defaultConfig = { style: EMPTY_SET, entity: null };
+	    var defaultConfig = {
+	      style: EMPTY_SET,
+	      entity: null
+	    };
 
 	    // Fill in unspecified properties, if necessary.
 	    var configMap = Map(defaultConfig).merge(config);
@@ -1072,6 +1053,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = CharacterMetadata;
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 *
+	 * 
+	 */
+
+	var nullthrows = function nullthrows(x) {
+	  if (x != null) {
+	    return x;
+	  }
+	  throw new Error("Got unexpected null or undefined");
+	};
+
+	module.exports = nullthrows;
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
@@ -1084,7 +1089,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule generateRandomKey
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -1118,11 +1123,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var UserAgentData = __webpack_require__(128);
-	var VersionRange = __webpack_require__(129);
+	var UserAgentData = __webpack_require__(129);
+	var VersionRange = __webpack_require__(130);
 
-	var mapObject = __webpack_require__(142);
-	var memoizeStringOnly = __webpack_require__(143);
+	var mapObject = __webpack_require__(143);
+	var memoizeStringOnly = __webpack_require__(144);
 
 	/**
 	 * Checks to see whether `name` and `version` satisfy `query`.
@@ -1350,6 +1355,102 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
+	'use strict';
+	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (err) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1361,6 +1462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule ContentBlock
+	 * @format
 	 * 
 	 */
 
@@ -1372,14 +1474,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var CharacterMetadata = __webpack_require__(5);
 	var Immutable = __webpack_require__(3);
 
-	var findRangesImmutable = __webpack_require__(20);
+	var findRangesImmutable = __webpack_require__(15);
 
 	var List = Immutable.List,
 	    Map = Immutable.Map,
 	    OrderedSet = Immutable.OrderedSet,
-	    Record = Immutable.Record;
+	    Record = Immutable.Record,
+	    Repeat = Immutable.Repeat;
 
 
 	var EMPTY_SET = OrderedSet();
@@ -1395,13 +1499,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ContentBlockRecord = Record(defaultRecord);
 
+	var decorateCharacterList = function decorateCharacterList(config) {
+	  if (!config) {
+	    return config;
+	  }
+
+	  var characterList = config.characterList,
+	      text = config.text;
+
+
+	  if (text && !characterList) {
+	    config.characterList = List(Repeat(CharacterMetadata.EMPTY, text.length));
+	  }
+
+	  return config;
+	};
+
 	var ContentBlock = function (_ContentBlockRecord) {
 	  _inherits(ContentBlock, _ContentBlockRecord);
 
-	  function ContentBlock() {
+	  function ContentBlock(config) {
 	    _classCallCheck(this, ContentBlock);
 
-	    return _possibleConstructorReturn(this, _ContentBlockRecord.apply(this, arguments));
+	    return _possibleConstructorReturn(this, _ContentBlockRecord.call(this, decorateCharacterList(config)));
 	  }
 
 	  ContentBlock.prototype.getKey = function getKey() {
@@ -1474,7 +1594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ContentBlock;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1499,7 +1619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	// These two ranges are consecutive so anything in [HIGH_START, LOW_END] is a
 	// surrogate code unit.
@@ -1691,102 +1811,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = UnicodeUtils;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-
-	'use strict';
-	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function shouldUseNative() {
-		try {
-			if (!Object.assign) {
-				return false;
-			}
-
-			// Detect buggy property enumeration order in older V8 versions.
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-			test1[5] = 'de';
-			if (Object.getOwnPropertyNames(test1)[0] === '5') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test2 = {};
-			for (var i = 0; i < 10; i++) {
-				test2['_' + String.fromCharCode(i)] = i;
-			}
-			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-				return test2[n];
-			});
-			if (order2.join('') !== '0123456789') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test3 = {};
-			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-				test3[letter] = letter;
-			});
-			if (Object.keys(Object.assign({}, test3)).join('') !==
-					'abcdefghijklmnopqrst') {
-				return false;
-			}
-
-			return true;
-		} catch (err) {
-			// We don't expect any of the above to throw, but better to be safe.
-			return false;
-		}
-	}
-
-	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
@@ -1805,6 +1829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule BlockMapBuilder
+	 * @format
 	 * 
 	 */
 
@@ -1838,7 +1863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule SelectionState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -1966,6 +1991,54 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 15 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule findRangesImmutable
+	 * @format
+	 * 
+	 */
+
+	'use strict';
+
+	/**
+	 * Search through an array to find contiguous stretches of elements that
+	 * match a specified filter function.
+	 *
+	 * When ranges are found, execute a specified `found` function to supply
+	 * the values to the caller.
+	 */
+	function findRangesImmutable(haystack, areEqualFn, filterFn, foundFn) {
+	  if (!haystack.size) {
+	    return;
+	  }
+
+	  var cursor = 0;
+
+	  haystack.reduce(function (value, nextValue, nextIndex) {
+	    if (!areEqualFn(value, nextValue)) {
+	      if (filterFn(value)) {
+	        foundFn(cursor, nextIndex);
+	      }
+	      cursor = nextIndex;
+	    }
+	    return nextValue;
+	  });
+
+	  filterFn(haystack.last()) && foundFn(cursor, haystack.count());
+	}
+
+	module.exports = findRangesImmutable;
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1977,6 +2050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule removeTextWithStrategy
+	 * @format
 	 * 
 	 */
 
@@ -2012,7 +2086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = removeTextWithStrategy;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -2056,18 +2130,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = cx;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -2080,14 +2154,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEntity
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	var DraftEntityInstance = __webpack_require__(39);
 	var Immutable = __webpack_require__(3);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var Map = Immutable.Map;
 
@@ -2261,7 +2335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEntity;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 	/**
@@ -2273,6 +2347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftOffsetKey
+	 * @format
 	 * 
 	 */
 
@@ -2302,53 +2377,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftOffsetKey;
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule findRangesImmutable
-	 * 
-	 */
-
-	'use strict';
-
-	/**
-	 * Search through an array to find contiguous stretches of elements that
-	 * match a specified filter function.
-	 *
-	 * When ranges are found, execute a specified `found` function to supply
-	 * the values to the caller.
-	 */
-	function findRangesImmutable(haystack, areEqualFn, filterFn, foundFn) {
-	  if (!haystack.size) {
-	    return;
-	  }
-
-	  var cursor = 0;
-
-	  haystack.reduce(function (value, nextValue, nextIndex) {
-	    if (!areEqualFn(value, nextValue)) {
-	      if (filterFn(value)) {
-	        foundFn(cursor, nextIndex);
-	      }
-	      cursor = nextIndex;
-	    }
-	    return nextValue;
-	  });
-
-	  filterFn(haystack.last()) && foundFn(cursor, haystack.count());
-	}
-
-	module.exports = findRangesImmutable;
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2361,7 +2389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getContentStateFragment
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2437,7 +2465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule isEventHandled
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2466,7 +2494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule ContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2479,9 +2507,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var BlockMapBuilder = __webpack_require__(13);
-	var CharacterMetadata = __webpack_require__(6);
-	var ContentBlock = __webpack_require__(9);
-	var DraftEntity = __webpack_require__(18);
+	var CharacterMetadata = __webpack_require__(5);
+	var ContentBlock = __webpack_require__(10);
+	var DraftEntity = __webpack_require__(19);
 	var Immutable = __webpack_require__(3);
 	var SelectionState = __webpack_require__(14);
 
@@ -2663,6 +2691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DefaultDraftBlockRenderMap
+	 * @format
 	 * 
 	 */
 
@@ -2673,7 +2702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var React = __webpack_require__(12);
 
-	var cx = __webpack_require__(16);
+	var cx = __webpack_require__(17);
 
 	var UL_WRAP = React.createElement('ul', { className: cx('public/DraftStyleDefault/ul') });
 	var OL_WRAP = React.createElement('ol', { className: cx('public/DraftStyleDefault/ol') });
@@ -2706,17 +2735,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    element: 'li',
 	    wrapper: OL_WRAP
 	  },
-	  'blockquote': {
+	  blockquote: {
 	    element: 'blockquote'
 	  },
-	  'atomic': {
+	  atomic: {
 	    element: 'figure'
 	  },
 	  'code-block': {
 	    element: 'pre',
 	    wrapper: PRE_WRAP
 	  },
-	  'unstyled': {
+	  unstyled: {
 	    element: 'div',
 	    aliasedElements: ['p']
 	  }
@@ -2737,7 +2766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule KeyBindingUtil
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2781,7 +2810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule findAncestorOffsetKey
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2819,7 +2848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getEntityKeyForSelection
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -2879,6 +2908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule moveSelectionBackward
+	 * @format
 	 * 
 	 */
 
@@ -2936,6 +2966,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule sanitizeDraftText
+	 * @format
 	 * 
 	 */
 
@@ -3003,7 +3034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var getStyleProperty = __webpack_require__(135);
+	var getStyleProperty = __webpack_require__(136);
 
 	/**
 	 * @param {DOMNode} element [description]
@@ -3085,7 +3116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var NEUTRAL = 'NEUTRAL'; // No strong direction
 	var LTR = 'LTR'; // Left-to-Right direction
@@ -3181,7 +3212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * 
 	 */
 
-	var isTextNode = __webpack_require__(140);
+	var isTextNode = __webpack_require__(141);
 
 	/*eslint-disable no-bitwise */
 
@@ -3264,8 +3295,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var getDocumentScrollElement = __webpack_require__(132);
-	var getUnboundedScrollPosition = __webpack_require__(136);
+	var getDocumentScrollElement = __webpack_require__(133);
+	var getUnboundedScrollPosition = __webpack_require__(137);
 
 	/**
 	 * Gets the scroll position of the supplied element or window.
@@ -3312,6 +3343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule BlockTree
+	 * @format
 	 * 
 	 */
 
@@ -3320,7 +3352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Immutable = __webpack_require__(3);
 
 	var emptyFunction = __webpack_require__(34);
-	var findRangesImmutable = __webpack_require__(20);
+	var findRangesImmutable = __webpack_require__(15);
 
 	var List = Immutable.List,
 	    Repeat = Immutable.Repeat,
@@ -3429,6 +3461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DefaultDraftInlineStyle
+	 * @format
 	 * 
 	 */
 
@@ -3470,13 +3503,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorBlock.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -3486,21 +3519,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DraftEditorLeaf = __webpack_require__(69);
-	var DraftOffsetKey = __webpack_require__(19);
+	var DraftEditorLeaf = __webpack_require__(70);
+	var DraftOffsetKey = __webpack_require__(20);
 	var React = __webpack_require__(12);
-	var ReactDOM = __webpack_require__(17);
+	var ReactDOM = __webpack_require__(18);
 	var Scroll = __webpack_require__(58);
 	var Style = __webpack_require__(31);
 	var UnicodeBidi = __webpack_require__(59);
 	var UnicodeBidiDirection = __webpack_require__(32);
 
-	var cx = __webpack_require__(16);
-	var getElementPosition = __webpack_require__(133);
+	var cx = __webpack_require__(17);
+	var getElementPosition = __webpack_require__(134);
 	var getScrollPosition = __webpack_require__(35);
-	var getViewportDimensions = __webpack_require__(137);
-	var invariant = __webpack_require__(2);
-	var nullthrows = __webpack_require__(5);
+	var getViewportDimensions = __webpack_require__(138);
+	var invariant = __webpack_require__(1);
+	var nullthrows = __webpack_require__(6);
 
 	var SCROLL_BUFFER = 10;
 
@@ -3586,9 +3619,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var end = leaf.get('end');
 	        return (
 	          /* $FlowFixMe(>=0.53.0 site=www,mobile) This comment suppresses an
-	           * error when upgrading Flow's support for React. Common errors found
-	           * when upgrading Flow's React support are documented at
-	           * https://fburl.com/eq7bs81w */
+	          * error when upgrading Flow's support for React. Common errors found
+	          * when upgrading Flow's React support are documented at
+	          * https://fburl.com/eq7bs81w */
 	          React.createElement(DraftEditorLeaf, {
 	            key: offsetKey,
 	            offsetKey: offsetKey,
@@ -3692,6 +3725,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEntityInstance
+	 * @legacyServerCallableInstance
+	 * @format
 	 * 
 	 */
 
@@ -3765,12 +3800,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftFeatureFlags
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var DraftFeatureFlags = __webpack_require__(73);
+	var DraftFeatureFlags = __webpack_require__(74);
 
 	module.exports = DraftFeatureFlags;
 
@@ -3787,13 +3823,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftRemovableWord
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var TokenizeUtil = __webpack_require__(125);
+	var TokenizeUtil = __webpack_require__(126);
 
 	var punctuation = TokenizeUtil.getPunctuation();
 
@@ -3843,7 +3879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftStringKey
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -3874,18 +3910,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule RichTextEditorUtil
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var SelectionState = __webpack_require__(14);
 
-	var adjustBlockDepthForContentState = __webpack_require__(78);
-	var nullthrows = __webpack_require__(5);
+	var adjustBlockDepthForContentState = __webpack_require__(79);
+	var nullthrows = __webpack_require__(6);
 
 	var RichTextEditorUtil = {
 	  currentBlockContainsLink: function currentBlockContainsLink(editorState) {
@@ -3956,7 +3992,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (blockBefore && blockBefore.getType() === 'atomic') {
 	      var blockMap = content.getBlockMap()['delete'](blockBefore.getKey());
-	      var withoutAtomicBlock = content.merge({ blockMap: blockMap, selectionAfter: selection });
+	      var withoutAtomicBlock = content.merge({
+	        blockMap: blockMap,
+	        selectionAfter: selection
+	      });
 	      if (withoutAtomicBlock !== content) {
 	        return EditorState.push(editorState, withoutAtomicBlock, 'remove-range');
 	      }
@@ -4140,8 +4179,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  /**
-	   * When a collapsed cursor is at the start of the first styled block, or 
-	   * an empty styled block, changes block to 'unstyled'. Returns null if 
+	   * When a collapsed cursor is at the start of the first styled block, or
+	   * an empty styled block, changes block to 'unstyled'. Returns null if
 	   * block or selection does not meet that criteria.
 	   */
 	  tryToRemoveBlockStyle: function tryToRemoveBlockStyle(editorState) {
@@ -4159,7 +4198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var type = block.getType();
 	      var blockBefore = content.getBlockBefore(key);
-	      if (type === 'code-block' && blockBefore && blockBefore.getType() === 'code-block') {
+	      if (type === 'code-block' && blockBefore && blockBefore.getType() === 'code-block' && blockBefore.getLength() !== 0) {
 	        return null;
 	      }
 
@@ -4186,27 +4225,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule convertFromHTMLToContentBlocks
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
-	var ContentBlock = __webpack_require__(9);
+	var CharacterMetadata = __webpack_require__(5);
+	var ContentBlock = __webpack_require__(10);
 	var DefaultDraftBlockRenderMap = __webpack_require__(24);
-	var DraftEntity = __webpack_require__(18);
+	var DraftEntity = __webpack_require__(19);
 	var Immutable = __webpack_require__(3);
 
 	var _require = __webpack_require__(3),
 	    Set = _require.Set;
 
-	var URI = __webpack_require__(126);
+	var URI = __webpack_require__(127);
 
 	var generateRandomKey = __webpack_require__(7);
 	var getSafeBodyFromHTML = __webpack_require__(49);
-	var invariant = __webpack_require__(2);
-	var nullthrows = __webpack_require__(5);
+	var invariant = __webpack_require__(1);
+	var nullthrows = __webpack_require__(6);
 	var sanitizeDraftText = __webpack_require__(29);
 
 	var List = Immutable.List,
@@ -4705,7 +4744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getDefaultKeyBinding
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -4834,7 +4873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getDraftEditorSelectionWithNodes
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -4843,8 +4882,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var findAncestorOffsetKey = __webpack_require__(26);
 	var getSelectionOffsetKeyForNode = __webpack_require__(50);
 	var getUpdatedSelectionState = __webpack_require__(52);
-	var invariant = __webpack_require__(2);
-	var nullthrows = __webpack_require__(5);
+	var invariant = __webpack_require__(1);
+	var nullthrows = __webpack_require__(6);
 
 	/**
 	 * Convert the current selection range to an anchor/focus pair of offset keys
@@ -5018,6 +5057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getFragmentFromSelection
+	 * @format
 	 * 
 	 */
 
@@ -5050,7 +5090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getRangeClientRects
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -5058,7 +5098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UserAgent = __webpack_require__(8);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var isChrome = UserAgent.isBrowser('Chrome');
 
@@ -5118,6 +5158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getSafeBodyFromHTML
+	 * @format
 	 * 
 	 */
 
@@ -5125,7 +5166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UserAgent = __webpack_require__(8);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var isOldIE = UserAgent.isBrowser('IE <= 9');
 
@@ -5161,7 +5202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getSelectionOffsetKeyForNode
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -5203,12 +5244,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getTextContentFromFiles
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var TEXT_CLIPPING_REGEX = /\.textClipping$/;
 
@@ -5288,14 +5330,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getUpdatedSelectionState
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var DraftOffsetKey = __webpack_require__(19);
+	var DraftOffsetKey = __webpack_require__(20);
 
-	var nullthrows = __webpack_require__(5);
+	var nullthrows = __webpack_require__(6);
 
 	function getUpdatedSelectionState(editorState, anchorKey, anchorOffset, focusKey, focusOffset) {
 	  var selection = nullthrows(editorState.getSelection());
@@ -5368,6 +5411,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule insertIntoList
+	 * @format
 	 * 
 	 */
 
@@ -5408,7 +5452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule isSelectionAtLeafStart
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -5461,6 +5505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule moveSelectionForward
+	 * @format
 	 * 
 	 */
 
@@ -5510,15 +5555,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule removeEntitiesAtEdges
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 
-	var findRangesImmutable = __webpack_require__(20);
-	var invariant = __webpack_require__(2);
+	var findRangesImmutable = __webpack_require__(15);
+	var invariant = __webpack_require__(1);
 
 	function removeEntitiesAtEdges(contentState, selectionState) {
 	  var blockMap = contentState.getBlockMap();
@@ -5619,9 +5665,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var PhotosMimeType = __webpack_require__(124);
+	var PhotosMimeType = __webpack_require__(125);
 
-	var createArrayFromMixed = __webpack_require__(131);
+	var createArrayFromMixed = __webpack_require__(132);
 	var emptyFunction = __webpack_require__(34);
 
 	var CR_LF_REGEX = new RegExp('\r\n', 'g');
@@ -5940,7 +5986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UnicodeBidiDirection = __webpack_require__(32);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	/**
 	 * RegExp ranges of characters with a *Strong* Bidi_Class value.
@@ -6127,22 +6173,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule AtomicBlockUtils
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var BlockMapBuilder = __webpack_require__(13);
-	var CharacterMetadata = __webpack_require__(6);
-	var ContentBlock = __webpack_require__(9);
+	var CharacterMetadata = __webpack_require__(5);
+	var ContentBlock = __webpack_require__(10);
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var Immutable = __webpack_require__(3);
 	var SelectionState = __webpack_require__(14);
 
 	var generateRandomKey = __webpack_require__(7);
-	var moveBlockInContentState = __webpack_require__(119);
+	var moveBlockInContentState = __webpack_require__(120);
 
 	var List = Immutable.List,
 	    Repeat = Immutable.Repeat;
@@ -6241,7 +6287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule CompositeDraftDecorator
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -6359,14 +6405,171 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
+	 * @providesModule ContentBlockNode
+	 * @format
+	 * 
+	 *
+	 * This is unstable and not part of the public API and should not be used by
+	 * production systems. This file may be update/removed without notice.
+	 */
+
+	'use strict';
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CharacterMetadata = __webpack_require__(5);
+	var Immutable = __webpack_require__(3);
+
+	var findRangesImmutable = __webpack_require__(15);
+
+	var List = Immutable.List,
+	    Map = Immutable.Map,
+	    OrderedSet = Immutable.OrderedSet,
+	    Record = Immutable.Record,
+	    Repeat = Immutable.Repeat;
+
+
+	var EMPTY_SET = OrderedSet();
+
+	var defaultRecord = {
+	  parent: null,
+	  characterList: List(),
+	  data: Map(),
+	  depth: 0,
+	  key: '',
+	  text: '',
+	  type: 'unstyled',
+	  children: List(),
+	  prevSibling: null,
+	  nextSibling: null
+	};
+
+	var haveEqualStyle = function haveEqualStyle(charA, charB) {
+	  return charA.getStyle() === charB.getStyle();
+	};
+
+	var haveEqualEntity = function haveEqualEntity(charA, charB) {
+	  return charA.getEntity() === charB.getEntity();
+	};
+
+	var decorateCharacterList = function decorateCharacterList(config) {
+	  if (!config) {
+	    return config;
+	  }
+
+	  var characterList = config.characterList,
+	      text = config.text;
+
+
+	  if (text && !characterList) {
+	    config.characterList = List(Repeat(CharacterMetadata.EMPTY, text.length));
+	  }
+
+	  return config;
+	};
+
+	var ContentBlockNode = function (_Record) {
+	  _inherits(ContentBlockNode, _Record);
+
+	  function ContentBlockNode() {
+	    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultRecord;
+
+	    _classCallCheck(this, ContentBlockNode);
+
+	    return _possibleConstructorReturn(this, _Record.call(this, decorateCharacterList(props)));
+	  }
+
+	  ContentBlockNode.prototype.getKey = function getKey() {
+	    return this.get('key');
+	  };
+
+	  ContentBlockNode.prototype.getType = function getType() {
+	    return this.get('type');
+	  };
+
+	  ContentBlockNode.prototype.getText = function getText() {
+	    return this.get('text');
+	  };
+
+	  ContentBlockNode.prototype.getCharacterList = function getCharacterList() {
+	    return this.get('characterList');
+	  };
+
+	  ContentBlockNode.prototype.getLength = function getLength() {
+	    return this.getText().length;
+	  };
+
+	  ContentBlockNode.prototype.getDepth = function getDepth() {
+	    return this.get('depth');
+	  };
+
+	  ContentBlockNode.prototype.getData = function getData() {
+	    return this.get('data');
+	  };
+
+	  ContentBlockNode.prototype.getInlineStyleAt = function getInlineStyleAt(offset) {
+	    var character = this.getCharacterList().get(offset);
+	    return character ? character.getStyle() : EMPTY_SET;
+	  };
+
+	  ContentBlockNode.prototype.getEntityAt = function getEntityAt(offset) {
+	    var character = this.getCharacterList().get(offset);
+	    return character ? character.getEntity() : null;
+	  };
+
+	  ContentBlockNode.prototype.getChildKeys = function getChildKeys() {
+	    return this.get('children');
+	  };
+
+	  ContentBlockNode.prototype.getParentKey = function getParentKey() {
+	    return this.get('parent');
+	  };
+
+	  ContentBlockNode.prototype.getPrevSiblingKey = function getPrevSiblingKey() {
+	    return this.get('prevSibling');
+	  };
+
+	  ContentBlockNode.prototype.getNextSiblingKey = function getNextSiblingKey() {
+	    return this.get('nextSibling');
+	  };
+
+	  ContentBlockNode.prototype.findStyleRanges = function findStyleRanges(filterFn, callback) {
+	    findRangesImmutable(this.getCharacterList(), haveEqualStyle, filterFn, callback);
+	  };
+
+	  ContentBlockNode.prototype.findEntityRanges = function findEntityRanges(filterFn, callback) {
+	    findRangesImmutable(this.getCharacterList(), haveEqualEntity, filterFn, callback);
+	  };
+
+	  return ContentBlockNode;
+	}(Record(defaultRecord));
+
+	module.exports = ContentBlockNode;
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
 	 * @providesModule ContentStateInlineStyle
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 
 	var _require = __webpack_require__(3),
 	    Map = _require.Map;
@@ -6425,7 +6628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ContentStateInlineStyle;
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -6437,14 +6640,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditor.react
-	 * @typechecks
+	 * @format
 	 * 
 	 * @preventMunge
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -6456,25 +6659,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DefaultDraftBlockRenderMap = __webpack_require__(24);
 	var DefaultDraftInlineStyle = __webpack_require__(37);
-	var DraftEditorCompositionHandler = __webpack_require__(65);
-	var DraftEditorContents = __webpack_require__(66);
-	var DraftEditorDragHandler = __webpack_require__(67);
-	var DraftEditorEditHandler = __webpack_require__(68);
-	var DraftEditorPlaceholder = __webpack_require__(70);
-	var EditorState = __webpack_require__(1);
+	var DraftEditorCompositionHandler = __webpack_require__(66);
+	var DraftEditorContents = __webpack_require__(67);
+	var DraftEditorDragHandler = __webpack_require__(68);
+	var DraftEditorEditHandler = __webpack_require__(69);
+	var DraftEditorPlaceholder = __webpack_require__(71);
+	var EditorState = __webpack_require__(2);
 	var React = __webpack_require__(12);
-	var ReactDOM = __webpack_require__(17);
+	var ReactDOM = __webpack_require__(18);
 	var Scroll = __webpack_require__(58);
 	var Style = __webpack_require__(31);
 	var UserAgent = __webpack_require__(8);
 
-	var cx = __webpack_require__(16);
+	var cx = __webpack_require__(17);
 	var emptyFunction = __webpack_require__(34);
 	var generateRandomKey = __webpack_require__(7);
 	var getDefaultKeyBinding = __webpack_require__(45);
 	var getScrollPosition = __webpack_require__(35);
-	var invariant = __webpack_require__(2);
-	var nullthrows = __webpack_require__(5);
+	var invariant = __webpack_require__(1);
+	var nullthrows = __webpack_require__(6);
 
 	var isIE = UserAgent.isBrowser('IE');
 
@@ -6485,11 +6688,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Define a set of handler objects to correspond to each possible `mode`
 	// of editor behavior.
 	var handlerMap = {
-	  'edit': DraftEditorEditHandler,
-	  'composite': DraftEditorCompositionHandler,
-	  'drag': DraftEditorDragHandler,
-	  'cut': null,
-	  'render': null
+	  edit: DraftEditorEditHandler,
+	  composite: DraftEditorCompositionHandler,
+	  drag: DraftEditorDragHandler,
+	  cut: null,
+	  render: null
 	};
 
 	/**
@@ -6504,6 +6707,87 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, DraftEditor);
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+	    _this.focus = function (scrollPosition) {
+	      var editorState = _this.props.editorState;
+
+	      var alreadyHasFocus = editorState.getSelection().getHasFocus();
+	      var editorNode = ReactDOM.findDOMNode(_this.editor);
+
+	      if (!editorNode) {
+	        // once in a while people call 'focus' in a setTimeout, and the node has
+	        // been deleted, so it can be null in that case.
+	        return;
+	      }
+
+	      var scrollParent = Style.getScrollParent(editorNode);
+
+	      var _ref = scrollPosition || getScrollPosition(scrollParent),
+	          x = _ref.x,
+	          y = _ref.y;
+
+	      !(editorNode instanceof HTMLElement) ?  true ? invariant(false, 'editorNode is not an HTMLElement') : invariant(false) : void 0;
+	      editorNode.focus();
+
+	      // Restore scroll position
+	      if (scrollParent === window) {
+	        window.scrollTo(x, y);
+	      } else {
+	        Scroll.setTop(scrollParent, y);
+	      }
+
+	      // On Chrome and Safari, calling focus on contenteditable focuses the
+	      // cursor at the first character. This is something you don't expect when
+	      // you're clicking on an input element but not directly on a character.
+	      // Put the cursor back where it was before the blur.
+	      if (!alreadyHasFocus) {
+	        _this.update(EditorState.forceSelection(editorState, editorState.getSelection()));
+	      }
+	    };
+
+	    _this.blur = function () {
+	      var editorNode = ReactDOM.findDOMNode(_this.editor);
+	      !(editorNode instanceof HTMLElement) ?  true ? invariant(false, 'editorNode is not an HTMLElement') : invariant(false) : void 0;
+	      editorNode.blur();
+	    };
+
+	    _this.setMode = function (mode) {
+	      _this._handler = handlerMap[mode];
+	    };
+
+	    _this.exitCurrentMode = function () {
+	      _this.setMode('edit');
+	    };
+
+	    _this.restoreEditorDOM = function (scrollPosition) {
+	      _this.setState({ contentsKey: _this.state.contentsKey + 1 }, function () {
+	        _this.focus(scrollPosition);
+	      });
+	    };
+
+	    _this.setClipboard = function (clipboard) {
+	      _this._clipboard = clipboard;
+	    };
+
+	    _this.getClipboard = function () {
+	      return _this._clipboard;
+	    };
+
+	    _this.update = function (editorState) {
+	      _this._latestEditorState = editorState;
+	      _this.props.onChange(editorState);
+	    };
+
+	    _this.onDragEnter = function () {
+	      _this._dragCount++;
+	    };
+
+	    _this.onDragLeave = function () {
+	      _this._dragCount--;
+	      if (_this._dragCount === 0) {
+	        _this.exitCurrentMode();
+	      }
+	    };
 
 	    _this._blockSelectEvents = false;
 	    _this._clipboard = null;
@@ -6535,22 +6819,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this._onPaste = _this._buildHandler('onPaste');
 	    _this._onSelect = _this._buildHandler('onSelect');
 
-	    // Manual binding for public and internal methods.
-	    _this.focus = _this._focus.bind(_this);
-	    _this.blur = _this._blur.bind(_this);
-	    _this.setMode = _this._setMode.bind(_this);
-	    _this.exitCurrentMode = _this._exitCurrentMode.bind(_this);
-	    _this.restoreEditorDOM = _this._restoreEditorDOM.bind(_this);
-	    _this.setClipboard = _this._setClipboard.bind(_this);
-	    _this.getClipboard = _this._getClipboard.bind(_this);
 	    _this.getEditorKey = function () {
 	      return _this._editorKey;
 	    };
-	    _this.update = _this._update.bind(_this);
-	    _this.onDragEnter = _this._onDragEnter.bind(_this);
-	    _this.onDragLeave = _this._onDragLeave.bind(_this);
 
-	    // See `_restoreEditorDOM()`.
+	    // See `restoreEditorDOM()`.
 	    _this.state = { contentsKey: 0 };
 	    return _this;
 	  }
@@ -6601,6 +6874,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  DraftEditor.prototype.render = function render() {
+	    var _this3 = this;
+
 	    var _props = this.props,
 	        readOnly = _props.readOnly,
 	        textAlignment = _props.textAlignment;
@@ -6634,7 +6909,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          className: cx('DraftEditor/editorContainer'),
-	          ref: 'editorContainer' },
+	          ref: function ref(_ref3) {
+	            return _this3.editorContainer = _ref3;
+	          } },
 	        React.createElement(
 	          'div',
 	          {
@@ -6653,7 +6930,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              // that Draft doesn't expect (ex: adding <font> tags inside
 	              // DraftEditorLeaf spans) and causes problems. We add notranslate
 	              // here which makes its autotranslation skip over this subtree.
-	              'notranslate': !readOnly,
+	              notranslate: !readOnly,
 	              'public/DraftEditor/content': true
 	            }),
 	            contentEditable: !readOnly,
@@ -6678,7 +6955,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            onMouseUp: this._onMouseUp,
 	            onPaste: this._onPaste,
 	            onSelect: this._onSelect,
-	            ref: 'editor',
+	            ref: function ref(_ref2) {
+	              return _this3.editor = _ref2;
+	            },
 	            role: readOnly ? null : ariaRole,
 	            spellCheck: allowSpellCheck && this.props.spellCheck,
 	            style: contentStyle,
@@ -6745,49 +7024,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 
-	  DraftEditor.prototype._focus = function _focus(scrollPosition) {
-	    var editorState = this.props.editorState;
-
-	    var alreadyHasFocus = editorState.getSelection().getHasFocus();
-	    var editorNode = ReactDOM.findDOMNode(this.refs.editor);
-
-	    if (!editorNode) {
-	      // once in a while people call 'focus' in a setTimeout, and the node has
-	      // been deleted, so it can be null in that case.
-	      return;
-	    }
-
-	    var scrollParent = Style.getScrollParent(editorNode);
-
-	    var _ref = scrollPosition || getScrollPosition(scrollParent),
-	        x = _ref.x,
-	        y = _ref.y;
-
-	    !(editorNode instanceof HTMLElement) ?  true ? invariant(false, 'editorNode is not an HTMLElement') : invariant(false) : void 0;
-	    editorNode.focus();
-
-	    // Restore scroll position
-	    if (scrollParent === window) {
-	      window.scrollTo(x, y);
-	    } else {
-	      Scroll.setTop(scrollParent, y);
-	    }
-
-	    // On Chrome and Safari, calling focus on contenteditable focuses the
-	    // cursor at the first character. This is something you don't expect when
-	    // you're clicking on an input element but not directly on a character.
-	    // Put the cursor back where it was before the blur.
-	    if (!alreadyHasFocus) {
-	      this.update(EditorState.forceSelection(editorState, editorState.getSelection()));
-	    }
-	  };
-
-	  DraftEditor.prototype._blur = function _blur() {
-	    var editorNode = ReactDOM.findDOMNode(this.refs.editor);
-	    !(editorNode instanceof HTMLElement) ?  true ? invariant(false, 'editorNode is not an HTMLElement') : invariant(false) : void 0;
-	    editorNode.blur();
-	  };
-
 	  /**
 	   * Used via `this.setMode(...)`.
 	   *
@@ -6796,14 +7032,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * the active mode.
 	   */
 
-
-	  DraftEditor.prototype._setMode = function _setMode(mode) {
-	    this._handler = handlerMap[mode];
-	  };
-
-	  DraftEditor.prototype._exitCurrentMode = function _exitCurrentMode() {
-	    this.setMode('edit');
-	  };
 
 	  /**
 	   * Used via `this.restoreEditorDOM()`.
@@ -6816,14 +7044,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 
-	  DraftEditor.prototype._restoreEditorDOM = function _restoreEditorDOM(scrollPosition) {
-	    var _this3 = this;
-
-	    this.setState({ contentsKey: this.state.contentsKey + 1 }, function () {
-	      _this3._focus(scrollPosition);
-	    });
-	  };
-
 	  /**
 	   * Used via `this.setClipboard(...)`.
 	   *
@@ -6831,20 +7051,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 
-	  DraftEditor.prototype._setClipboard = function _setClipboard(clipboard) {
-	    this._clipboard = clipboard;
-	  };
-
 	  /**
 	   * Used via `this.getClipboard()`.
 	   *
 	   * Retrieve the clipboard state for a cut/copy event.
 	   */
 
-
-	  DraftEditor.prototype._getClipboard = function _getClipboard() {
-	    return this._clipboard;
-	  };
 
 	  /**
 	   * Used via `this.update(...)`.
@@ -6857,33 +7069,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 
-	  DraftEditor.prototype._update = function _update(editorState) {
-	    this._latestEditorState = editorState;
-	    this.props.onChange(editorState);
-	  };
-
 	  /**
-	   * Used in conjunction with `_onDragLeave()`, by counting the number of times
+	   * Used in conjunction with `onDragLeave()`, by counting the number of times
 	   * a dragged element enters and leaves the editor (or any of its children),
 	   * to determine when the dragged element absolutely leaves the editor.
 	   */
 
 
-	  DraftEditor.prototype._onDragEnter = function _onDragEnter() {
-	    this._dragCount++;
-	  };
-
 	  /**
-	   * See `_onDragEnter()`.
+	   * See `onDragEnter()`.
 	   */
 
-
-	  DraftEditor.prototype._onDragLeave = function _onDragLeave() {
-	    this._dragCount--;
-	    if (this._dragCount === 0) {
-	      this.exitCurrentMode();
-	    }
-	  };
 
 	  return DraftEditor;
 	}(React.Component);
@@ -6902,7 +7098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditor;
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -6914,13 +7110,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorCompositionHandler
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var Keys = __webpack_require__(30);
 
 	var getEntityKeyForSelection = __webpack_require__(27);
@@ -7076,7 +7273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorCompositionHandler;
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7088,13 +7285,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorContents.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -7105,13 +7302,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var DraftEditorBlock = __webpack_require__(38);
-	var DraftOffsetKey = __webpack_require__(19);
-	var EditorState = __webpack_require__(1);
+	var DraftOffsetKey = __webpack_require__(20);
+	var EditorState = __webpack_require__(2);
 	var React = __webpack_require__(12);
 
-	var cx = __webpack_require__(16);
-	var joinClasses = __webpack_require__(141);
-	var nullthrows = __webpack_require__(5);
+	var cx = __webpack_require__(17);
+	var joinClasses = __webpack_require__(142);
+	var nullthrows = __webpack_require__(6);
 
 	/**
 	 * `DraftEditorContents` is the container component for all block components
@@ -7369,7 +7566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorContents;
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7381,7 +7578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorDragHandler
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -7389,13 +7586,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DataTransfer = __webpack_require__(57);
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var findAncestorOffsetKey = __webpack_require__(26);
 	var getTextContentFromFiles = __webpack_require__(51);
 	var getUpdatedSelectionState = __webpack_require__(52);
 	var isEventHandled = __webpack_require__(22);
-	var nullthrows = __webpack_require__(5);
+	var nullthrows = __webpack_require__(6);
 
 	/**
 	 * Get a SelectionState for the supplied mouse event.
@@ -7470,7 +7667,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    editor.update(insertTextAtSelection(editorState, dropSelection, data.getText()));
 	  }
-
 	};
 
 	function moveText(editorState, targetSelection) {
@@ -7489,7 +7685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorDragHandler;
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7501,23 +7697,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorEditHandler
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var onBeforeInput = __webpack_require__(86);
-	var onBlur = __webpack_require__(87);
-	var onCompositionStart = __webpack_require__(88);
-	var onCopy = __webpack_require__(89);
-	var onCut = __webpack_require__(90);
-	var onDragOver = __webpack_require__(91);
-	var onDragStart = __webpack_require__(92);
-	var onFocus = __webpack_require__(93);
-	var onInput = __webpack_require__(94);
-	var onKeyDown = __webpack_require__(95);
-	var onPaste = __webpack_require__(96);
-	var onSelect = __webpack_require__(97);
+	var onBeforeInput = __webpack_require__(87);
+	var onBlur = __webpack_require__(88);
+	var onCompositionStart = __webpack_require__(89);
+	var onCopy = __webpack_require__(90);
+	var onCut = __webpack_require__(91);
+	var onDragOver = __webpack_require__(92);
+	var onDragStart = __webpack_require__(93);
+	var onFocus = __webpack_require__(94);
+	var onInput = __webpack_require__(95);
+	var onKeyDown = __webpack_require__(96);
+	var onPaste = __webpack_require__(97);
+	var onSelect = __webpack_require__(98);
 
 	var DraftEditorEditHandler = {
 	  onBeforeInput: onBeforeInput,
@@ -7537,7 +7734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorEditHandler;
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7549,13 +7746,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorLeaf.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7563,13 +7760,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var ContentBlock = __webpack_require__(9);
-	var DraftEditorTextNode = __webpack_require__(71);
+	var DraftEditorTextNode = __webpack_require__(72);
 	var React = __webpack_require__(12);
-	var ReactDOM = __webpack_require__(17);
+	var ReactDOM = __webpack_require__(18);
 
-	var invariant = __webpack_require__(2);
-	var setDraftEditorSelection = __webpack_require__(121);
+	var invariant = __webpack_require__(1);
+	var setDraftEditorSelection = __webpack_require__(122);
 
 	/**
 	 * All leaf nodes in the editor are spans with single text nodes. Leaf
@@ -7589,15 +7785,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
 	  }
 
-	  /**
-	   * By making individual leaf instances aware of their context within
-	   * the text of the editor, we can set our selection range more
-	   * easily than we could in the non-React world.
-	   *
-	   * Note that this depends on our maintaining tight control over the
-	   * DOM structure of the DraftEditor component. If leaves had multiple
-	   * text nodes, this would be harder.
-	   */
 	  DraftEditorLeaf.prototype._setSelection = function _setSelection() {
 	    var selection = this.props.selection;
 
@@ -7638,9 +7825,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    setDraftEditorSelection(selection, targetNode, blockKey, start, end);
 	  };
+	  /**
+	   * By making individual leaf instances aware of their context within
+	   * the text of the editor, we can set our selection range more
+	   * easily than we could in the non-React world.
+	   *
+	   * Note that this depends on our maintaining tight control over the
+	   * DOM structure of the DraftEditor component. If leaves had multiple
+	   * text nodes, this would be harder.
+	   */
 
 	  DraftEditorLeaf.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-	    var leafNode = ReactDOM.findDOMNode(this.refs.leaf);
+	    var leafNode = ReactDOM.findDOMNode(this.leaf);
 	    !leafNode ?  true ? invariant(false, 'Missing leafNode') : invariant(false) : void 0;
 	    return leafNode.textContent !== nextProps.text || nextProps.styleSet !== this.props.styleSet || nextProps.forceSelection;
 	  };
@@ -7654,6 +7850,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  DraftEditorLeaf.prototype.render = function render() {
+	    var _this2 = this;
+
 	    var block = this.props.block;
 	    var text = this.props.text;
 
@@ -7693,7 +7891,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'span',
 	      {
 	        'data-offset-key': offsetKey,
-	        ref: 'leaf',
+	        ref: function ref(_ref) {
+	          return _this2.leaf = _ref;
+	        },
 	        style: styleObj },
 	      React.createElement(
 	        DraftEditorTextNode,
@@ -7709,7 +7909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorLeaf;
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7721,7 +7921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorPlaceholder.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -7735,7 +7935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var React = __webpack_require__(12);
 
-	var cx = __webpack_require__(16);
+	var cx = __webpack_require__(17);
 
 	/**
 	 * This component is responsible for rendering placeholder text for the
@@ -7783,7 +7983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorPlaceholder;
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -7795,7 +7995,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorTextNode.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -7808,10 +8008,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var React = __webpack_require__(12);
-	var ReactDOM = __webpack_require__(17);
+	var ReactDOM = __webpack_require__(18);
 	var UserAgent = __webpack_require__(8);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	// In IE, spans with <br> tags render as two newlines. By rendering a span
 	// with only a newline character, we can be sure to render a single line.
@@ -7899,7 +8099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEditorTextNode;
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports) {
 
 	/**
@@ -7911,7 +8111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEntitySegments
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -8003,7 +8203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftEntitySegments;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
 	/**
@@ -8015,6 +8215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftFeatureFlags-core
+	 * @format
 	 * 
 	 */
 
@@ -8028,7 +8229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftFeatureFlags;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 	/**
@@ -8051,7 +8252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8063,14 +8264,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftPasteProcessor
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
-	var ContentBlock = __webpack_require__(9);
+	var CharacterMetadata = __webpack_require__(5);
+	var ContentBlock = __webpack_require__(10);
 	var Immutable = __webpack_require__(3);
 
 	var convertFromHTMLtoContentBlocks = __webpack_require__(44);
@@ -8102,7 +8303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = DraftPasteProcessor;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8114,16 +8315,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule EditorBidiService
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var Immutable = __webpack_require__(3);
-	var UnicodeBidiService = __webpack_require__(127);
+	var UnicodeBidiService = __webpack_require__(128);
 
-	var nullthrows = __webpack_require__(5);
+	var nullthrows = __webpack_require__(6);
 
 	var OrderedMap = Immutable.OrderedMap;
 
@@ -8155,7 +8356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = EditorBidiService;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8167,16 +8368,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule SecondaryClipboard
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var getContentStateFragment = __webpack_require__(21);
-	var nullthrows = __webpack_require__(5);
+	var nullthrows = __webpack_require__(6);
 
 	var clipboard = null;
 
@@ -8229,7 +8431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = SecondaryClipboard;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 	/**
@@ -8241,7 +8443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule adjustBlockDepthForContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -8273,7 +8475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = adjustBlockDepthForContentState;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8285,13 +8487,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule applyEntityToContentBlock
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 
 	function applyEntityToContentBlock(contentBlock, start, end, entityKey) {
 	  var characterList = contentBlock.getCharacterList();
@@ -8305,7 +8507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = applyEntityToContentBlock;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8317,7 +8519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule applyEntityToContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -8325,7 +8527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Immutable = __webpack_require__(3);
 
-	var applyEntityToContentBlock = __webpack_require__(79);
+	var applyEntityToContentBlock = __webpack_require__(80);
 
 	function applyEntityToContentState(contentState, selectionState, entityKey) {
 	  var blockMap = contentState.getBlockMap();
@@ -8354,77 +8556,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = applyEntityToContentState;
 
 /***/ }),
-/* 81 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule convertFromDraftStateToRaw
-	 * 
-	 */
-
-	'use strict';
-
-	var DraftStringKey = __webpack_require__(42);
-
-	var encodeEntityRanges = __webpack_require__(98);
-	var encodeInlineStyleRanges = __webpack_require__(99);
-
-	function convertFromDraftStateToRaw(contentState) {
-	  var entityStorageKey = 0;
-	  var entityStorageMap = {};
-	  var rawBlocks = [];
-
-	  contentState.getBlockMap().forEach(function (block, blockKey) {
-	    block.findEntityRanges(function (character) {
-	      return character.getEntity() !== null;
-	    }, function (start) {
-	      // Stringify to maintain order of otherwise numeric keys.
-	      var stringifiedEntityKey = DraftStringKey.stringify(block.getEntityAt(start));
-	      if (!entityStorageMap.hasOwnProperty(stringifiedEntityKey)) {
-	        entityStorageMap[stringifiedEntityKey] = '' + entityStorageKey++;
-	      }
-	    });
-
-	    rawBlocks.push({
-	      key: blockKey,
-	      text: block.getText(),
-	      type: block.getType(),
-	      depth: block.getDepth(),
-	      inlineStyleRanges: encodeInlineStyleRanges(block),
-	      entityRanges: encodeEntityRanges(block, entityStorageMap),
-	      data: block.getData().toObject()
-	    });
-	  });
-
-	  // Flip storage map so that our storage keys map to global
-	  // DraftEntity keys.
-	  var entityKeys = Object.keys(entityStorageMap);
-	  var flippedStorageMap = {};
-	  entityKeys.forEach(function (key, jj) {
-	    var entity = contentState.getEntity(DraftStringKey.unstringify(key));
-	    flippedStorageMap[jj] = {
-	      type: entity.getType(),
-	      mutability: entity.getMutability(),
-	      data: entity.getData()
-	    };
-	  });
-
-	  return {
-	    entityMap: flippedStorageMap,
-	    blocks: rawBlocks
-	  };
-	}
-
-	module.exports = convertFromDraftStateToRaw;
-
-/***/ }),
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8436,24 +8567,173 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule convertFromRawToDraftState
+	 * @providesModule convertFromDraftStateToRaw
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var _assign = __webpack_require__(11);
+	var _assign = __webpack_require__(9);
 
 	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var ContentBlock = __webpack_require__(9);
+	var ContentBlock = __webpack_require__(10);
+	var ContentBlockNode = __webpack_require__(63);
+	var DraftStringKey = __webpack_require__(42);
+
+	var encodeEntityRanges = __webpack_require__(99);
+	var encodeInlineStyleRanges = __webpack_require__(100);
+	var invariant = __webpack_require__(1);
+
+	var createRawBlock = function createRawBlock(block, entityStorageMap) {
+	  return {
+	    key: block.getKey(),
+	    text: block.getText(),
+	    type: block.getType(),
+	    depth: block.getDepth(),
+	    inlineStyleRanges: encodeInlineStyleRanges(block),
+	    entityRanges: encodeEntityRanges(block, entityStorageMap),
+	    data: block.getData().toObject()
+	  };
+	};
+
+	var insertRawBlock = function insertRawBlock(block, entityMap, rawBlocks, blockCacheRef) {
+	  if (block instanceof ContentBlock) {
+	    rawBlocks.push(createRawBlock(block, entityMap));
+	    return;
+	  }
+
+	  !(block instanceof ContentBlockNode) ?  true ? invariant(false, 'block is not a BlockNode') : invariant(false) : void 0;
+
+	  var parentKey = block.getParentKey();
+	  var rawBlock = blockCacheRef[block.getKey()] = _extends({}, createRawBlock(block, entityMap), {
+	    children: []
+	  });
+
+	  if (parentKey) {
+	    blockCacheRef[parentKey].children.push(rawBlock);
+	    return;
+	  }
+
+	  rawBlocks.push(rawBlock);
+	};
+
+	var insertRawEntity = function insertRawEntity(entityStorageKey, entityKey, entityMap, entityCacheRef) {
+	  // Stringify to maintain order of otherwise numeric keys.
+	  var stringifiedEntityKey = DraftStringKey.stringify(entityKey);
+
+	  if (entityCacheRef[stringifiedEntityKey]) {
+	    return;
+	  }
+
+	  entityCacheRef[stringifiedEntityKey] = entityKey;
+
+	  // we need the `any` casting here since this is a temporary state
+	  // where we will later on flip the entity map and populate it with
+	  // real entity, at this stage we just need to map back the entity
+	  // key used by the BlockNode
+	  entityMap[stringifiedEntityKey] = '' + entityStorageKey;
+	};
+
+	var encodeRawBlocks = function encodeRawBlocks(contentState, rawState) {
+	  var entityMap = rawState.entityMap;
+
+
+	  var rawBlocks = [];
+
+	  var blockCacheRef = {};
+	  var entityCacheRef = {};
+	  var entityStorageKey = 0;
+
+	  contentState.getBlockMap().forEach(function (block) {
+	    block.findEntityRanges(function (character) {
+	      return character.getEntity() !== null;
+	    }, function (start) {
+	      return insertRawEntity(entityStorageKey++, block.getEntityAt(start), entityMap, entityCacheRef);
+	    });
+
+	    insertRawBlock(block, entityMap, rawBlocks, blockCacheRef);
+	  });
+
+	  return {
+	    blocks: rawBlocks,
+	    entityMap: entityMap
+	  };
+	};
+
+	// Flip storage map so that our storage keys map to global
+	// DraftEntity keys.
+	var encodeRawEntityMap = function encodeRawEntityMap(contentState, rawState) {
+	  var blocks = rawState.blocks,
+	      entityMap = rawState.entityMap;
+
+
+	  var rawEntityMap = {};
+
+	  Object.keys(entityMap).forEach(function (key, index) {
+	    var entity = contentState.getEntity(DraftStringKey.unstringify(key));
+	    rawEntityMap[index] = {
+	      type: entity.getType(),
+	      mutability: entity.getMutability(),
+	      data: entity.getData()
+	    };
+	  });
+
+	  return {
+	    blocks: blocks,
+	    entityMap: rawEntityMap
+	  };
+	};
+
+	var convertFromDraftStateToRaw = function convertFromDraftStateToRaw(contentState) {
+	  var rawDraftContentState = {
+	    entityMap: {},
+	    blocks: []
+	  };
+
+	  // add blocks
+	  rawDraftContentState = encodeRawBlocks(contentState, rawDraftContentState);
+
+	  // add entities
+	  rawDraftContentState = encodeRawEntityMap(contentState, rawDraftContentState);
+
+	  return rawDraftContentState;
+	};
+
+	module.exports = convertFromDraftStateToRaw;
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule convertFromRawToDraftState
+	 * @format
+	 * 
+	 */
+
+	'use strict';
+
+	var _assign = __webpack_require__(9);
+
+	var _extends = _assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var ContentBlock = __webpack_require__(10);
 	var ContentState = __webpack_require__(23);
-	var DraftEntity = __webpack_require__(18);
+	var DraftEntity = __webpack_require__(19);
 	var Immutable = __webpack_require__(3);
 
-	var createCharacterList = __webpack_require__(83);
-	var decodeEntityRanges = __webpack_require__(84);
-	var decodeInlineStyleRanges = __webpack_require__(85);
+	var createCharacterList = __webpack_require__(84);
+	var decodeEntityRanges = __webpack_require__(85);
+	var decodeInlineStyleRanges = __webpack_require__(86);
 	var generateRandomKey = __webpack_require__(7);
 
 	var Map = Immutable.Map;
@@ -8514,7 +8794,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = convertFromRawToDraftState;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8526,13 +8806,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule createCharacterList
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 	var Immutable = __webpack_require__(3);
 
 	var List = Immutable.List;
@@ -8549,7 +8829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createCharacterList;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8561,13 +8841,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule decodeEntityRanges
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var UnicodeUtils = __webpack_require__(10);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var substr = UnicodeUtils.substr;
 
@@ -8594,7 +8874,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = decodeEntityRanges;
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8606,7 +8886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule decodeInlineStyleRanges
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -8615,7 +8895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _require = __webpack_require__(3),
 	    OrderedSet = _require.OrderedSet;
 
-	var UnicodeUtils = __webpack_require__(10);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var substr = UnicodeUtils.substr;
 
@@ -8643,7 +8923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = decodeInlineStyleRanges;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8655,6 +8935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnBeforeInput
+	 * @format
 	 * 
 	 */
 
@@ -8662,14 +8943,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var BlockTree = __webpack_require__(36);
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var UserAgent = __webpack_require__(8);
 
 	var getEntityKeyForSelection = __webpack_require__(27);
 	var isEventHandled = __webpack_require__(22);
 	var isSelectionAtLeafStart = __webpack_require__(54);
-	var nullthrows = __webpack_require__(5);
-	var setImmediate = __webpack_require__(144);
+	var nullthrows = __webpack_require__(6);
+	var setImmediate = __webpack_require__(145);
 
 	// When nothing is focused, Firefox regards two characters, `'` and `/`, as
 	// commands that should open and focus the "quickfind" search bar. This should
@@ -8678,8 +8959,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	// This breaks the input. Special case these characters to ensure that when
 	// they are typed, we prevent default on the event to make sure not to
 	// trigger quickfind.
-	var FF_QUICKFIND_CHAR = '\'';
-	var FF_QUICKFIND_LINK_CHAR = '\/';
+	var FF_QUICKFIND_CHAR = "'";
+	var FF_QUICKFIND_LINK_CHAR = '/';
 	var isFirefox = UserAgent.isBrowser('Firefox');
 
 	function mustPreventDefaultForCharacter(character) {
@@ -8818,7 +9099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8830,12 +9111,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnBlur
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var containsNode = __webpack_require__(33);
 	var getActiveElement = __webpack_require__(60);
@@ -8872,7 +9154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8884,12 +9166,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnCompositionStart
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	/**
 	 * The user has begun using an IME input system. Switching to `composite` mode
@@ -8905,7 +9188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnCompositionStart;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8917,6 +9200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnCopy
+	 * @format
 	 * 
 	 */
 
@@ -8945,7 +9229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnCopy;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8957,13 +9241,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnCut
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var Style = __webpack_require__(31);
 
 	var getFragmentFromSelection = __webpack_require__(47);
@@ -9019,7 +9304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnCut;
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 	/**
@@ -9031,6 +9316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnDragOver
+	 * @format
 	 * 
 	 */
 
@@ -9048,7 +9334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnDragOver;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports) {
 
 	/**
@@ -9060,6 +9346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnDragStart
+	 * @format
 	 * 
 	 */
 
@@ -9076,7 +9363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnDragStart;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9088,12 +9375,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnFocus
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var UserAgent = __webpack_require__(8);
 
 	function editOnFocus(editor, e) {
@@ -9126,7 +9414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnFocus;
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9138,6 +9426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnInput
+	 * @format
 	 * 
 	 */
 
@@ -9145,12 +9434,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DraftFeatureFlags = __webpack_require__(40);
 	var DraftModifier = __webpack_require__(4);
-	var DraftOffsetKey = __webpack_require__(19);
-	var EditorState = __webpack_require__(1);
+	var DraftOffsetKey = __webpack_require__(20);
+	var EditorState = __webpack_require__(2);
 	var UserAgent = __webpack_require__(8);
 
 	var findAncestorOffsetKey = __webpack_require__(26);
-	var nullthrows = __webpack_require__(5);
+	var nullthrows = __webpack_require__(6);
 
 	var isGecko = UserAgent.isEngine('Gecko');
 
@@ -9303,7 +9592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9315,29 +9604,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnKeyDown
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 	var KeyBindingUtil = __webpack_require__(25);
 	var Keys = __webpack_require__(30);
-	var SecondaryClipboard = __webpack_require__(77);
+	var SecondaryClipboard = __webpack_require__(78);
 	var UserAgent = __webpack_require__(8);
 
 	var isEventHandled = __webpack_require__(22);
-	var keyCommandBackspaceToStartOfLine = __webpack_require__(108);
-	var keyCommandBackspaceWord = __webpack_require__(109);
-	var keyCommandDeleteWord = __webpack_require__(110);
-	var keyCommandInsertNewline = __webpack_require__(111);
-	var keyCommandMoveSelectionToEndOfBlock = __webpack_require__(112);
-	var keyCommandMoveSelectionToStartOfBlock = __webpack_require__(113);
-	var keyCommandPlainBackspace = __webpack_require__(114);
-	var keyCommandPlainDelete = __webpack_require__(115);
-	var keyCommandTransposeCharacters = __webpack_require__(116);
-	var keyCommandUndo = __webpack_require__(117);
+	var keyCommandBackspaceToStartOfLine = __webpack_require__(109);
+	var keyCommandBackspaceWord = __webpack_require__(110);
+	var keyCommandDeleteWord = __webpack_require__(111);
+	var keyCommandInsertNewline = __webpack_require__(112);
+	var keyCommandMoveSelectionToEndOfBlock = __webpack_require__(113);
+	var keyCommandMoveSelectionToStartOfBlock = __webpack_require__(114);
+	var keyCommandPlainBackspace = __webpack_require__(115);
+	var keyCommandPlainDelete = __webpack_require__(116);
+	var keyCommandTransposeCharacters = __webpack_require__(117);
+	var keyCommandUndo = __webpack_require__(118);
 
 	var isOptionKeyCommand = KeyBindingUtil.isOptionKeyCommand;
 
@@ -9461,7 +9751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnKeyDown;
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9473,23 +9763,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnPaste
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var BlockMapBuilder = __webpack_require__(13);
-	var CharacterMetadata = __webpack_require__(6);
+	var CharacterMetadata = __webpack_require__(5);
 	var DataTransfer = __webpack_require__(57);
 	var DraftModifier = __webpack_require__(4);
-	var DraftPasteProcessor = __webpack_require__(75);
-	var EditorState = __webpack_require__(1);
+	var DraftPasteProcessor = __webpack_require__(76);
+	var EditorState = __webpack_require__(2);
 	var RichTextEditorUtil = __webpack_require__(43);
 
 	var getEntityKeyForSelection = __webpack_require__(27);
 	var getTextContentFromFiles = __webpack_require__(51);
 	var isEventHandled = __webpack_require__(22);
-	var splitTextIntoTextBlocks = __webpack_require__(123);
+	var splitTextIntoTextBlocks = __webpack_require__(124);
 
 	/**
 	 * Paste content.
@@ -9630,7 +9921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnPaste;
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9642,16 +9933,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule editOnSelect
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(17);
+	var EditorState = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(18);
 
-	var getDraftEditorSelection = __webpack_require__(102);
-	var invariant = __webpack_require__(2);
+	var getDraftEditorSelection = __webpack_require__(103);
+	var invariant = __webpack_require__(1);
 
 	function editOnSelect(editor) {
 	  if (editor._blockSelectEvents || editor._latestEditorState !== editor.props.editorState) {
@@ -9659,7 +9951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var editorState = editor.props.editorState;
-	  var editorNode = ReactDOM.findDOMNode(editor.refs.editorContainer);
+	  var editorNode = ReactDOM.findDOMNode(editor.editorContainer);
 	  !editorNode ?  true ? invariant(false, 'Missing editorNode') : invariant(false) : void 0;
 	  !(editorNode.firstChild instanceof HTMLElement) ?  true ? invariant(false, 'editorNode.firstChild is not an HTMLElement') : invariant(false) : void 0;
 	  var documentSelection = getDraftEditorSelection(editorState, editorNode.firstChild);
@@ -9678,7 +9970,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = editOnSelect;
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9690,14 +9982,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule encodeEntityRanges
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftStringKey = __webpack_require__(42);
-	var UnicodeUtils = __webpack_require__(10);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var strlen = UnicodeUtils.strlen;
 
@@ -9725,7 +10017,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = encodeEntityRanges;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9737,14 +10029,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule encodeInlineStyleRanges
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var UnicodeUtils = __webpack_require__(10);
+	var UnicodeUtils = __webpack_require__(11);
 
-	var findRangesImmutable = __webpack_require__(20);
+	var findRangesImmutable = __webpack_require__(15);
 
 	var areEqual = function areEqual(a, b) {
 	  return a === b;
@@ -9798,7 +10091,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = encodeInlineStyleRanges;
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9812,14 +10105,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule expandRangeToStartOfLine
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
-	var UnicodeUtils = __webpack_require__(10);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var getRangeClientRects = __webpack_require__(48);
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	/**
 	 * Return the computed line height, in pixels, for the provided element.
@@ -9995,7 +10288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = expandRangeToStartOfLine;
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10007,16 +10300,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getCharacterRemovalRange
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var DraftEntitySegments = __webpack_require__(72);
+	var DraftEntitySegments = __webpack_require__(73);
 
-	var getRangesForDraftEntity = __webpack_require__(104);
-	var invariant = __webpack_require__(2);
+	var getRangesForDraftEntity = __webpack_require__(105);
+	var invariant = __webpack_require__(1);
 
 	/**
 	 * Given a SelectionState and a removal direction, determine the entire range
@@ -10115,7 +10408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getCharacterRemovalRange;
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10127,7 +10420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getDraftEditorSelection
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -10157,7 +10450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10169,7 +10462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getRangeBoundingClientRect
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -10233,7 +10526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getRangeBoundingClientRect;
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10245,13 +10538,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getRangesForDraftEntity
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	/**
 	 * Obtain the start and end positions of the range that has the
@@ -10277,7 +10570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getRangesForDraftEntity;
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10289,13 +10582,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule getVisibleSelectionRect
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var getRangeBoundingClientRect = __webpack_require__(103);
+	var getRangeBoundingClientRect = __webpack_require__(104);
 
 	/**
 	 * Return the bounding ClientRect for the visible DOM selection, if any.
@@ -10329,7 +10622,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getVisibleSelectionRect;
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10341,7 +10634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule insertFragmentIntoContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -10351,7 +10644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var generateRandomKey = __webpack_require__(7);
 	var insertIntoList = __webpack_require__(53);
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	function insertFragmentIntoContentState(contentState, selectionState, fragment) {
 	  !selectionState.isCollapsed() ?  true ? invariant(false, '`insertFragment` should only be called with a collapsed selection state.') : invariant(false) : void 0;
@@ -10458,7 +10751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = insertFragmentIntoContentState;
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10470,7 +10763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule insertTextIntoContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -10479,7 +10772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Immutable = __webpack_require__(3);
 
 	var insertIntoList = __webpack_require__(53);
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var Repeat = Immutable.Repeat;
 
@@ -10517,7 +10810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = insertTextIntoContentState;
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10529,17 +10822,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandBackspaceToStartOfLine
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
-	var expandRangeToStartOfLine = __webpack_require__(100);
+	var expandRangeToStartOfLine = __webpack_require__(101);
 	var getDraftEditorSelectionWithNodes = __webpack_require__(46);
 	var moveSelectionBackward = __webpack_require__(28);
-	var removeTextWithStrategy = __webpack_require__(15);
+	var removeTextWithStrategy = __webpack_require__(16);
 
 	function keyCommandBackspaceToStartOfLine(editorState) {
 	  var afterRemoval = removeTextWithStrategy(editorState, function (strategyState) {
@@ -10566,7 +10860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10578,16 +10872,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandBackspaceWord
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftRemovableWord = __webpack_require__(41);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var moveSelectionBackward = __webpack_require__(28);
-	var removeTextWithStrategy = __webpack_require__(15);
+	var removeTextWithStrategy = __webpack_require__(16);
 
 	/**
 	 * Delete the word that is left of the cursor, as well as any spaces or
@@ -10618,7 +10913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandBackspaceWord;
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10630,16 +10925,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandDeleteWord
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftRemovableWord = __webpack_require__(41);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var moveSelectionForward = __webpack_require__(55);
-	var removeTextWithStrategy = __webpack_require__(15);
+	var removeTextWithStrategy = __webpack_require__(16);
 
 	/**
 	 * Delete the word that is right of the cursor, as well as any spaces or
@@ -10668,34 +10964,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandDeleteWord;
 
 /***/ }),
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule keyCommandInsertNewline
-	 * 
-	 */
-
-	'use strict';
-
-	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
-
-	function keyCommandInsertNewline(editorState) {
-	  var contentState = DraftModifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
-	  return EditorState.push(editorState, contentState, 'split-block');
-	}
-
-	module.exports = keyCommandInsertNewline;
-
-/***/ }),
 /* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10707,13 +10975,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule keyCommandMoveSelectionToEndOfBlock
+	 * @providesModule keyCommandInsertNewline
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var DraftModifier = __webpack_require__(4);
+	var EditorState = __webpack_require__(2);
+
+	function keyCommandInsertNewline(editorState) {
+	  var contentState = DraftModifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
+	  return EditorState.push(editorState, contentState, 'split-block');
+	}
+
+	module.exports = keyCommandInsertNewline;
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule keyCommandMoveSelectionToEndOfBlock
+	 * @format
+	 * 
+	 */
+
+	'use strict';
+
+	var EditorState = __webpack_require__(2);
 
 	/**
 	 * See comment for `moveSelectionToStartOfBlock`.
@@ -10738,7 +11036,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandMoveSelectionToEndOfBlock;
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10750,12 +11048,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandMoveSelectionToStartOfBlock
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	/**
 	 * Collapse selection at the start of the first selected block. This is used
@@ -10780,7 +11079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandMoveSelectionToStartOfBlock;
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10792,16 +11091,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandPlainBackspace
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
-	var UnicodeUtils = __webpack_require__(10);
+	var EditorState = __webpack_require__(2);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var moveSelectionBackward = __webpack_require__(28);
-	var removeTextWithStrategy = __webpack_require__(15);
+	var removeTextWithStrategy = __webpack_require__(16);
 
 	/**
 	 * Remove the selected range. If the cursor is collapsed, remove the preceding
@@ -10829,7 +11129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandPlainBackspace;
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10841,16 +11141,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandPlainDelete
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
-	var UnicodeUtils = __webpack_require__(10);
+	var EditorState = __webpack_require__(2);
+	var UnicodeUtils = __webpack_require__(11);
 
 	var moveSelectionForward = __webpack_require__(55);
-	var removeTextWithStrategy = __webpack_require__(15);
+	var removeTextWithStrategy = __webpack_require__(16);
 
 	/**
 	 * Remove the selected range. If the cursor is collapsed, remove the following
@@ -10879,7 +11180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandPlainDelete;
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10891,13 +11192,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandTransposeCharacters
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
 	var DraftModifier = __webpack_require__(4);
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	var getContentStateFragment = __webpack_require__(21);
 
@@ -10962,7 +11264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandTransposeCharacters;
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -10974,12 +11276,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule keyCommandUndo
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var EditorState = __webpack_require__(1);
+	var EditorState = __webpack_require__(2);
 
 	function keyCommandUndo(e, editorState, updateFn) {
 	  var undoneState = EditorState.undo(editorState);
@@ -11015,7 +11318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyCommandUndo;
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11027,7 +11330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule modifyBlockForContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -11058,7 +11361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = modifyBlockForContentState;
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11070,13 +11373,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule moveBlockInContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	function moveBlockInContentState(contentState, blockToBeMoved, targetBlock, insertionMode) {
 	  !(blockToBeMoved.getKey() !== targetBlock.getKey()) ?  true ? invariant(false, 'Block cannot be moved next to itself.') : invariant(false) : void 0;
@@ -11121,7 +11424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = moveBlockInContentState;
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11133,6 +11436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule removeRangeFromContentState
+	 * @format
 	 * 
 	 */
 
@@ -11217,7 +11521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = removeRangeFromContentState;
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11229,18 +11533,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule setDraftEditorSelection
-	 * @typechecks
 	 * @format
 	 * 
 	 */
 
 	'use strict';
 
-	var DraftJsDebugLogging = __webpack_require__(74);
+	var DraftJsDebugLogging = __webpack_require__(75);
 
 	var containsNode = __webpack_require__(33);
 	var getActiveElement = __webpack_require__(60);
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	function getAnonymizedDOM(node, getNodeLabels) {
 	  if (!node) {
@@ -11469,7 +11772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11481,7 +11784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule splitBlockInContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -11490,7 +11793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Immutable = __webpack_require__(3);
 
 	var generateRandomKey = __webpack_require__(7);
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var Map = Immutable.Map;
 
@@ -11543,7 +11846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = splitBlockInContentState;
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11555,6 +11858,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule splitTextIntoTextBlocks
+	 * @format
 	 * 
 	 */
 
@@ -11569,7 +11873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = splitTextIntoTextBlocks;
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11600,7 +11904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PhotosMimeType;
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11640,7 +11944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11673,7 +11977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = URI;
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11723,7 +12027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var UnicodeBidi = __webpack_require__(59);
 	var UnicodeBidiDirection = __webpack_require__(32);
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var UnicodeBidiService = function () {
 
@@ -11776,7 +12080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = UnicodeBidiService;
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11800,7 +12104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var UAParser = __webpack_require__(147);
+	var UAParser = __webpack_require__(148);
 
 	var UNKNOWN = 'Unknown';
 
@@ -11861,7 +12165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = uaData;
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -11874,7 +12178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	var componentRegex = /\./;
 	var orRegex = /\|\|/;
@@ -12246,7 +12550,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = VersionRange;
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -12280,7 +12584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = camelize;
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12294,7 +12598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var invariant = __webpack_require__(2);
+	var invariant = __webpack_require__(1);
 
 	/**
 	 * Convert array-like objects to arrays.
@@ -12409,7 +12713,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = createArrayFromMixed;
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12445,7 +12749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getDocumentScrollElement;
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12459,7 +12763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var getElementRect = __webpack_require__(134);
+	var getElementRect = __webpack_require__(135);
 
 	/**
 	 * Gets an element's position in pixels relative to the viewport. The returned
@@ -12481,7 +12785,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getElementPosition;
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12534,7 +12838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getElementRect;
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12548,8 +12852,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var camelize = __webpack_require__(130);
-	var hyphenate = __webpack_require__(138);
+	var camelize = __webpack_require__(131);
+	var hyphenate = __webpack_require__(139);
 
 	function asString(value) /*?string*/{
 	  return value == null ? value : String(value);
@@ -12590,7 +12894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getStyleProperty;
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12631,7 +12935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getUnboundedScrollPosition;
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -12693,7 +12997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getViewportDimensions;
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12728,7 +13032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = hyphenate;
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12755,7 +13059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isNode;
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12769,7 +13073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typechecks
 	 */
 
-	var isNode = __webpack_require__(139);
+	var isNode = __webpack_require__(140);
 
 	/**
 	 * @param {*} object The object to check.
@@ -12782,7 +13086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isTextNode;
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12824,7 +13128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = joinClasses;
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12877,7 +13181,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = mapObject;
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12909,7 +13213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = memoizeStringOnly;
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12925,12 +13229,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	// setimmediate adds setImmediate to the global. We want to make sure we export
 	// the actual function.
 
-	__webpack_require__(146);
+	__webpack_require__(147);
 	module.exports = global.setImmediate;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports) {
 
 	// shim for using process in browser
@@ -13120,7 +13424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -13310,10 +13614,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    attachTo.clearImmediate = clearImmediate;
 	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(145)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(146)))
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -14317,7 +14621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        exports.UAParser = UAParser;
 	    } else {
 	        // requirejs env (optional)
-	        if ("function" === FUNC_TYPE && __webpack_require__(148)) {
+	        if ("function" === FUNC_TYPE && __webpack_require__(149)) {
 	            !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	                return UAParser;
 	            }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -14352,7 +14656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
