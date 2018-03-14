@@ -26,6 +26,7 @@ const DraftEditorContents = require('./DraftEditorContents.react');
 const DraftEditorDragHandler = require('./DraftEditorDragHandler');
 const DraftEditorEditHandler = require('./DraftEditorEditHandler');
 const DraftEditorPlaceholder = require('./DraftEditorPlaceholder.react');
+const DraftODS = require('./DraftODS');
 const EditorState = require('./EditorState');
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -38,6 +39,7 @@ const emptyFunction = require('fbjs/lib/emptyFunction');
 const generateRandomKey = require('./generateRandomKey');
 const getDefaultKeyBinding = require('./getDefaultKeyBinding');
 const getScrollPosition = require('fbjs/lib/getScrollPosition');
+const gkx = require('./gkx');
 const invariant = require('fbjs/lib/invariant');
 const nullthrows = require('fbjs/lib/nullthrows');
 
@@ -60,6 +62,8 @@ const handlerMap = {
 type State = {
   contentsKey: number
 };
+
+let didInitODS = false;
 
 /**
  * `DraftEditor` is the root editor component. It composes a `contentEditable`
@@ -171,10 +175,20 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * editor mode, if any has been specified.
    */
   _buildHandler(eventName: string): Function {
+    const flushControlled = ReactDOM.unstable_flushControlled;
+    // Wrap event handlers in `flushControlled`. In sync mode, this is
+    // effetively a no-op. In async mode, this ensures all updates scheduled
+    // inside the handler are flushed before React yields to the browser.
     return e => {
       if (!this.props.readOnly) {
         const method = this._handler && this._handler[eventName];
-        method && method(this, e);
+        if (method) {
+          if (flushControlled && gkx('draft_js_flush_sync')) {
+            flushControlled(() => method(this, e));
+          } else {
+            method(this, e);
+          }
+        }
       }
     };
   }
@@ -185,19 +199,31 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
 
   _renderPlaceholder(): ?React.Element<any> {
     if (this._showPlaceholder()) {
-      return (
-        /* $FlowFixMe(>=0.53.0 site=www,mobile) This comment suppresses an
-         * error when upgrading Flow's support for React. Common errors found
-         * when upgrading Flow's React support are documented at
-         * https://fburl.com/eq7bs81w */
-        <DraftEditorPlaceholder text={nullthrows(this.props.placeholder)} editorState={this.props.editorState} textAlignment={this.props.textAlignment} accessibilityID={this._placeholderAccessibilityID} />
-      );
+      const placeHolderProps = {
+        text: nullthrows(this.props.placeholder),
+        editorState: this.props.editorState,
+        textAlignment: this.props.textAlignment,
+        accessibilityID: this._placeholderAccessibilityID
+      };
+
+      return <DraftEditorPlaceholder {...placeHolderProps} />;
     }
     return null;
   }
 
   render(): React.Node {
-    const { readOnly, textAlignment } = this.props;
+    const {
+      blockRenderMap,
+      blockRendererFn,
+      blockStyleFn,
+      customStyleFn,
+      customStyleMap,
+      editorState,
+      readOnly,
+      textAlignment,
+      textDirectionality
+    } = this.props;
+
     const rootClass = cx({
       'DraftEditor/root': true,
       'DraftEditor/alignLeft': textAlignment === 'left',
@@ -219,10 +245,25 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     const ariaRole = this.props.role || 'textbox';
     const ariaExpanded = ariaRole === 'combobox' ? !!this.props.ariaExpanded : null;
 
+    const editorContentsProps = {
+      blockRenderMap,
+      blockRendererFn,
+      blockStyleFn,
+      customStyleMap: {
+        ...DefaultDraftInlineStyle,
+        ...customStyleMap
+      },
+      customStyleFn,
+      editorKey: this._editorKey,
+      editorState,
+      key: 'contents' + this.state.contentsKey,
+      textDirectionality
+    };
+
     return <div className={rootClass}>
         {this._renderPlaceholder()}
         <div className={cx('DraftEditor/editorContainer')} ref={ref => this.editorContainer = ref}>
-          <div aria-activedescendant={readOnly ? null : this.props.ariaActiveDescendantID} aria-autocomplete={readOnly ? null : this.props.ariaAutoComplete} aria-controls={readOnly ? null : this.props.ariaControls} aria-describedby={this._showPlaceholder() ? this._placeholderAccessibilityID : null} aria-expanded={readOnly ? null : ariaExpanded} aria-label={this.props.ariaLabel} aria-multiline={this.props.ariaMultiline} autoCapitalize={this.props.autoCapitalize} autoComplete={this.props.autoComplete} autoCorrect={this.props.autoCorrect} className={cx({
+          <div aria-activedescendant={readOnly ? null : this.props.ariaActiveDescendantID} aria-autocomplete={readOnly ? null : this.props.ariaAutoComplete} aria-controls={readOnly ? null : this.props.ariaControls} aria-describedby={this.props.ariaDescribedBy || this._placeholderAccessibilityID} aria-expanded={readOnly ? null : ariaExpanded} aria-label={this.props.ariaLabel} aria-labelledby={this.props.ariaLabelledBy} aria-multiline={this.props.ariaMultiline} autoCapitalize={this.props.autoCapitalize} autoComplete={this.props.autoComplete} autoCorrect={this.props.autoCorrect} className={cx({
           // Chrome's built-in translation feature mutates the DOM in ways
           // that Draft doesn't expect (ex: adding <font> tags inside
           // DraftEditorLeaf spans) and causes problems. We add notranslate
@@ -230,17 +271,17 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
           notranslate: !readOnly,
           'public/DraftEditor/content': true
         })} contentEditable={!readOnly} data-testid={this.props.webDriverTestID} onBeforeInput={this._onBeforeInput} onBlur={this._onBlur} onCompositionEnd={this._onCompositionEnd} onCompositionStart={this._onCompositionStart} onCopy={this._onCopy} onCut={this._onCut} onDragEnd={this._onDragEnd} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDragOver={this._onDragOver} onDragStart={this._onDragStart} onDrop={this._onDrop} onFocus={this._onFocus} onInput={this._onInput} onKeyDown={this._onKeyDown} onKeyPress={this._onKeyPress} onKeyUp={this._onKeyUp} onMouseUp={this._onMouseUp} onPaste={this._onPaste} onSelect={this._onSelect} ref={ref => this.editor = ref} role={readOnly ? null : ariaRole} spellCheck={allowSpellCheck && this.props.spellCheck} style={contentStyle} suppressContentEditableWarning tabIndex={this.props.tabIndex}>
-            {}
-            <DraftEditorContents blockRenderMap={this.props.blockRenderMap} blockRendererFn={this.props.blockRendererFn} blockStyleFn={this.props.blockStyleFn} customStyleMap={{
-            ...DefaultDraftInlineStyle,
-            ...this.props.customStyleMap
-          }} customStyleFn={this.props.customStyleFn} editorKey={this._editorKey} editorState={this.props.editorState} key={'contents' + this.state.contentsKey} textDirectionality={this.props.textDirectionality} />
+            <DraftEditorContents {...editorContentsProps} />
           </div>
         </div>
       </div>;
   }
 
   componentDidMount(): void {
+    if (!didInitODS && gkx('draft_ods_enabled')) {
+      didInitODS = true;
+      DraftODS.init();
+    }
     this.setMode('edit');
 
     /**
