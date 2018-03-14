@@ -133,7 +133,7 @@ export type DraftEditorProps = {
   ; handleDrop?: (selection: SelectionState, dataTransfer: Object, isInternal: DraftDragType) => DraftHandleValue
 
   /**
-   * Non-cancelable event triggers.
+   * Deprecated event triggers.
    */
   ; onEscape?: (e: SyntheticKeyboardEvent<>) => void;
   onTab?: (e: SyntheticKeyboardEvent<>) => void;
