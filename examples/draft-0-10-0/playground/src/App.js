@@ -3,32 +3,34 @@
  *
  * @providesModule DraftJsPlaygroundContainer.react
  * @flow
-* @format
+ * @format
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './DraftJsPlaygroundContainer.css';
-import { Controlled as CodeMirror } from 'react-codemirror2';
+import {Controlled as CodeMirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
-import 'draft-js/dist/Draft.css'
-import JSONTree from 'react-json-tree'
-import { convertToHTML } from 'draft-convert';
+import 'draft-js/dist/Draft.css';
+import './App.css';
+import DraftJsRichEditorExample from './DraftJsRichEditorExample';
+import JSONTree from 'react-json-tree';
+import {convertToHTML} from 'draft-convert';
 import PanelGroup from 'react-panelgroup';
+import gkx from 'draft-js/lib/gkx';
+import convertFromHTMLModern from 'draft-js/lib/convertFromHTMLToContentBlocks2';
 
 import {
   ContentState,
-  Editor,
   EditorState,
-  convertFromHTML,
+  convertFromHTML as convertFromHTMLClassic,
   convertToRaw,
-  convertFromRaw
+  convertFromRaw,
 } from 'draft-js';
 
-// const SomeCodeMirror = require('SomeCodeMirror.react');
-// const SomeButton = require('SomeButton.react');
-// const SomeSelector = require('SomeSelector.react');
-// const SomeSelectorOption = require('SomeSelectorOption.react');
+const fromHTML = gkx('draft_refactored_html_importer')
+  ? convertFromHTMLModern
+  : convertFromHTMLClassic;
 
 const theme = {
   scheme: 'monokai',
@@ -48,7 +50,7 @@ const theme = {
   base0C: '#a1efe4',
   base0D: '#66d9ef',
   base0E: '#ae81ff',
-  base0F: '#cc6633'
+  base0F: '#cc6633',
 };
 
 const baseRawContent = {
@@ -56,14 +58,24 @@ const baseRawContent = {
     {
       key: 'A',
       text: 'Hello world',
+      type: 'header-one',
     },
   ],
   entityMap: {},
 };
 
-const baseHtmlContent = `
-<h1>heading inside blockquote</h1>
-<p>paragraph inside blockquote</p>
+const baseHtmlContent = `<ol>
+  <li>one</li>
+  <li>
+    <ul>
+      <li>
+        <h1>2a</h1>
+      </li>
+      <li>2b</li>
+    </ul>
+   </li>
+   <li>three</li>
+</ol>
 `;
 
 const BASE_CONTENT = {
@@ -77,7 +89,7 @@ class DraftJsPlaygroundContainer extends Component {
     this.state = {
       mode: 'rawContent',
       editorState: EditorState.createEmpty(),
-      codeMirrorValue: BASE_CONTENT['rawContent']
+      codeMirrorValue: BASE_CONTENT['rawContent'],
     };
   }
 
@@ -85,7 +97,7 @@ class DraftJsPlaygroundContainer extends Component {
     this.setContent();
   }
 
-  onChange = (editorState) => {
+  onChange = editorState => {
     this.setState({editorState});
   };
 
@@ -94,20 +106,24 @@ class DraftJsPlaygroundContainer extends Component {
   }
 
   importEditorState = () => {
-    const { editorState, mode } = this.state;
+    const {editorState, mode} = this.state;
     if (mode === 'html') {
       this.setState({
         codeMirrorValue: convertToHTML(editorState.getCurrentContent()),
-      })
+      });
     } else {
       this.setState({
-        codeMirrorValue: JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2),
-      })
+        codeMirrorValue: JSON.stringify(
+          convertToRaw(editorState.getCurrentContent()),
+          null,
+          2,
+        ),
+      });
     }
-  }
+  };
 
   _setHTMLContent(html) {
-    const parsedHtml = convertFromHTML(html);
+    const parsedHtml = fromHTML(html);
 
     if (!parsedHtml) {
       return;
@@ -126,15 +142,15 @@ class DraftJsPlaygroundContainer extends Component {
 
   _setRawContent(rawContent) {
     try {
-      const parsedJson = JSON.parse(rawContent)
+      const parsedJson = JSON.parse(rawContent);
       this._setContentBlock(convertFromRaw(parsedJson));
-    } catch(err) {
+    } catch (err) {
       alert('The json is invalid');
     }
   }
 
   setContent = () => {
-    const { mode, codeMirrorValue } = this.state;
+    const {mode, codeMirrorValue} = this.state;
 
     if (mode === 'html') {
       this._setHTMLContent(codeMirrorValue);
@@ -143,68 +159,140 @@ class DraftJsPlaygroundContainer extends Component {
     }
   };
 
-  onSelectChange = ({ target: { value: mode } }) => {
-    this.setState({mode});
+  onSelectChange = ({target: {value: mode}}) => {
+    this.setState({
+      mode,
+      codeMirrorValue: BASE_CONTENT[mode],
+    });
   };
 
-  updateCodeMirror = (editor, data, codeMirrorValue) => {
-    this.setState({ codeMirrorValue });
-  }
+  updateCodeMirror = codeMirrorValue => {
+    this.setState({codeMirrorValue});
+  };
+
+  shouldExpandNode = (keyName, data, level) => {
+    return ['blockMap', 'root'].some(
+      defaultVisibleNode => keyName[0] === defaultVisibleNode,
+    );
+  };
+
+  onExperimentChange = ({target: {value: experimentFlags}}) => {
+    if (experimentFlags) {
+      window.location.search = `gk_enable=${experimentFlags}`;
+    }
+  };
 
   render() {
     const {editorState, mode, codeMirrorValue} = this.state;
-    const lang = mode === 'html' ? mode : 'json';
 
     return (
-      <PanelGroup borderColor="grey">
-        <PanelGroup direction="column" borderColor="grey">
-          <div className='DraftJsPlaygroundContainer-raw'>
-            <div className={'DraftJsPlaygroundContainer-controls'}>
-              <select
-                onChange={this.onSelectChange}
-                value={mode}>
-                <option value="rawContent">Raw Content</option>
-                <option value="html">HTML</option>
-              </select>
-              <button
-                onClick={this.setContent}
-              >
-                Update draft content
-              </button>
-              <button
-                onClick={this.importEditorState}
-              >
-                Import draft content
-              </button>
+      <div className="container">
+        <div className="nav-main">
+          <div className="wrap">
+            <a
+              className="nav-home"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://draftjs.org/">
+              Draft.js
+            </a>
+            <ul className="nav-site">
+              <li>
+                <select
+                  className="nav-experiment-selector"
+                  name="experiment"
+                  onChange={this.onExperimentChange}>
+                  <option value="">Try an experiment..</option>
+                  <option value="draft_refactored_html_importer">
+                    Modern HTML importer
+                  </option>
+                  <option value="draft_tree_data_support,draft_refactored_html_importer">
+                    Tree data structure
+                  </option>
+                </select>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://draftjs.org/docs/overview.html#content">
+                  Docs
+                </a>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/facebook/draft-js">
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="playground-main">
+          <PanelGroup borderColor="grey">
+            <PanelGroup direction="column" borderColor="grey">
+              <div className="DraftJsPlaygroundContainer-editor">
+                <DraftJsRichEditorExample
+                  className="DraftEditor-root"
+                  editorState={editorState}
+                  onChange={this.onChange}
+                  placeholder="Editor content is empty..."
+                />
+              </div>
+              <div className="DraftJsPlaygroundContainer-raw">
+                <div className="DraftJsPlaygroundContainer-controls">
+                  <section className="contentControls">
+                    <select
+                      title="Draft.js content type switch"
+                      onChange={this.onSelectChange}
+                      value={mode}>
+                      <option value="rawContent">Raw</option>
+                      <option value="html">HTML</option>
+                    </select>
+                  </section>
+                  <section className="contentControls">
+                    <button
+                      title="Import content type from the editor"
+                      onClick={this.importEditorState}>
+                      Import
+                    </button>
+                    <button
+                      title="Update the editor with content type"
+                      onClick={this.setContent}>
+                      Update
+                    </button>
+                  </section>
+                </div>
+                <CodeMirror
+                  onBeforeChange={(editor, data, codeMirrorValue) =>
+                    this.updateCodeMirror(codeMirrorValue)
+                  }
+                  ref={input => {
+                    this.markupinput = input;
+                  }}
+                  options={{
+                    mode: 'application/ld+json',
+                    matchBrackets: true,
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    autoCloseBrackets: true,
+                  }}
+                  value={codeMirrorValue}
+                />
+              </div>
+            </PanelGroup>
+            <div className="playground-raw-preview">
+              <JSONTree
+                shouldExpandNode={this.shouldExpandNode}
+                theme={theme}
+                data={editorState.getCurrentContent()}
+              />
             </div>
-            <CodeMirror
-              onBeforeChange={this.updateCodeMirror}
-              ref={input => {
-                this.markupinput = input;
-              }}
-              options={{
-                mode: 'application/ld+json',
-                matchBrackets: true,
-                lineWrapping: true,
-                autoCloseBrackets: true,
-              }}
-              value={codeMirrorValue}
-            />
-          </div>
-          <div className={'DraftJsPlaygroundContainer-editor'}>
-            <Editor
-              className={'DraftEditor-root'}
-              editorState={editorState}
-              onChange={this.onChange}
-              placeholder="Editor content is empty..."
-            />
-          </div>
-        </PanelGroup>
-        <JSONTree
-          theme={theme}
-          data={editorState.getCurrentContent()}
-        />
-      </PanelGroup>
+          </PanelGroup>
+        </div>
+      </div>
     );
   }
 }

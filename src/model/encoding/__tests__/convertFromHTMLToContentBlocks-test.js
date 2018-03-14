@@ -308,3 +308,12 @@ test('Should import recognised draft li depths when nesting enabled', () => {
     experimentalTreeDataSupport: true,
   });
 });
+
+test('Should preserve spacing around inline tags', () => {
+  const html_string = `
+    <span>Some<span> </span></span><i>stylised</i><span><span> </span></span><b>text</b>
+  `;
+  assertConvertFromHTMLToContentBlocks(html_string, {
+    experimentalTreeDataSupport: true,
+  });
+});
