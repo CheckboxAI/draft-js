@@ -26,6 +26,7 @@ const DraftEditorContents = require('DraftEditorContents.react');
 const DraftEditorDragHandler = require('DraftEditorDragHandler');
 const DraftEditorEditHandler = require('DraftEditorEditHandler');
 const DraftEditorPlaceholder = require('DraftEditorPlaceholder.react');
+const DraftODS = require('DraftODS');
 const EditorState = require('EditorState');
 const React = require('React');
 const ReactDOM = require('ReactDOM');
@@ -38,6 +39,7 @@ const emptyFunction = require('emptyFunction');
 const generateRandomKey = require('generateRandomKey');
 const getDefaultKeyBinding = require('getDefaultKeyBinding');
 const getScrollPosition = require('getScrollPosition');
+const gkx = require('gkx');
 const invariant = require('invariant');
 const nullthrows = require('nullthrows');
 
@@ -60,6 +62,8 @@ const handlerMap = {
 type State = {
   contentsKey: number,
 };
+
+let didInitODS = false;
 
 /**
  * `DraftEditor` is the root editor component. It composes a `contentEditable`
@@ -171,10 +175,20 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * editor mode, if any has been specified.
    */
   _buildHandler(eventName: string): Function {
+    const flushControlled = ReactDOM.unstable_flushControlled;
+    // Wrap event handlers in `flushControlled`. In sync mode, this is
+    // effetively a no-op. In async mode, this ensures all updates scheduled
+    // inside the handler are flushed before React yields to the browser.
     return e => {
       if (!this.props.readOnly) {
         const method = this._handler && this._handler[eventName];
-        method && method(this, e);
+        if (method) {
+          if (flushControlled && gkx('draft_js_flush_sync')) {
+            flushControlled(() => method(this, e));
+          } else {
+            method(this, e);
+          }
+        }
       }
     };
   }
@@ -264,7 +278,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
             aria-autocomplete={readOnly ? null : this.props.ariaAutoComplete}
             aria-controls={readOnly ? null : this.props.ariaControls}
             aria-describedby={
-              this._showPlaceholder() ? this._placeholderAccessibilityID : null
+              this.props.ariaDescribedBy || this._placeholderAccessibilityID
             }
             aria-expanded={readOnly ? null : ariaExpanded}
             aria-label={this.props.ariaLabel}
@@ -317,6 +331,10 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
   }
 
   componentDidMount(): void {
+    if (!didInitODS && gkx('draft_ods_enabled')) {
+      didInitODS = true;
+      DraftODS.init();
+    }
     this.setMode('edit');
 
     /**
