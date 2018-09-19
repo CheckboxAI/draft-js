@@ -4873,9 +4873,15 @@ var DraftEditorBlock = function (_React$Component) {
     return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
   }
 
-  DraftEditorBlock.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-    return this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection;
-  };
+  // shouldComponentUpdate(nextProps: Props): boolean {
+  //   return (
+  //     this.props.block !== nextProps.block ||
+  //     this.props.tree !== nextProps.tree ||
+  //     this.props.direction !== nextProps.direction ||
+  //     (isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) &&
+  //       nextProps.forceSelection)
+  //   );
+  // }
 
   /**
    * When a block is mounted and overlaps the selection state, we need to make
@@ -4889,8 +4895,6 @@ var DraftEditorBlock = function (_React$Component) {
    * parent, and adjust it to align the entire block to the bottom of the
    * scroll parent.
    */
-
-
   DraftEditorBlock.prototype.componentDidMount = function componentDidMount() {
     var selection = this.props.selection;
     var endKey = selection.getEndKey();
@@ -12870,6 +12874,10 @@ var DraftEditorContents = function (_React$Component) {
 
     var prevFocusBlockType = prevFocusBlock ? prevFocusBlock.getData().get('location') : null;
     var nextFocusBlockType = nextFocusBlock ? nextFocusBlock.getData().get('location') : null;
+
+    if (prevFocusKey !== nextFocusKey) {
+      return true;
+    }
 
     if (prevFocusBlockType !== nextFocusBlockType) {
       return true;

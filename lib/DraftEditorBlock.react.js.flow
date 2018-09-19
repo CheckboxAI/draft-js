@@ -69,9 +69,15 @@ const isBlockOnSelectionEdge = (selection: SelectionState, key: string): boolean
  * appropriate decorator and inline style components.
  */
 class DraftEditorBlock extends React.Component<Props> {
-  shouldComponentUpdate(nextProps: Props): boolean {
-    return this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection;
-  }
+  // shouldComponentUpdate(nextProps: Props): boolean {
+  //   return (
+  //     this.props.block !== nextProps.block ||
+  //     this.props.tree !== nextProps.tree ||
+  //     this.props.direction !== nextProps.direction ||
+  //     (isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) &&
+  //       nextProps.forceSelection)
+  //   );
+  // }
 
   /**
    * When a block is mounted and overlaps the selection state, we need to make

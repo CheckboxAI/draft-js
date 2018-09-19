@@ -13,10 +13,10 @@
 
 'use strict';
 
-import type {BlockNodeRecord} from 'BlockNodeRecord';
-import type {DraftBlockRenderMap} from 'DraftBlockRenderMap';
-import type {DraftInlineStyle} from 'DraftInlineStyle';
-import type {BidiDirection} from 'UnicodeBidiDirection';
+import type { BlockNodeRecord } from 'BlockNodeRecord';
+import type { DraftBlockRenderMap } from 'DraftBlockRenderMap';
+import type { DraftInlineStyle } from 'DraftInlineStyle';
+import type { BidiDirection } from 'UnicodeBidiDirection';
 
 const DraftEditorBlock = require('DraftEditorBlock.react');
 const DraftOffsetKey = require('DraftOffsetKey');
@@ -29,9 +29,9 @@ const nullthrows = require('nullthrows');
 
 type Props = {
   blockRenderMap: DraftBlockRenderMap,
-  blockRendererFn: (block: BlockNodeRecord) => ?Object,
+  blockRendererFn: (block: BlockNodeRecord) =>?Object,
   blockStyleFn?: (block: BlockNodeRecord) => string,
-  customStyleFn?: (style: DraftInlineStyle, block: BlockNodeRecord) => ?Object,
+  customStyleFn?: (style: DraftInlineStyle, block: BlockNodeRecord) =>?Object,
   customStyleMap?: Object,
   editorKey?: string,
   editorState: EditorState,
@@ -84,7 +84,7 @@ class DraftEditorContents extends React.Component<Props> {
 
     const prevContent = prevEditorState.getCurrentContent();
     const nextContent = nextEditorState.getCurrentContent();
-   
+
     const prevFocusKey = prevEditorState.getSelection().getFocusKey();
     const nextFocusKey = nextEditorState.getSelection().getFocusKey();
 
@@ -93,10 +93,14 @@ class DraftEditorContents extends React.Component<Props> {
 
     const prevFocusBlockType = prevFocusBlock ? prevFocusBlock.getData().get('location') : null;
     const nextFocusBlockType = nextFocusBlock ? nextFocusBlock.getData().get('location') : null;
-   
+
+    if (prevFocusKey !== nextFocusKey) {
+      return true;
+    }
+
     if (prevFocusBlockType !== nextFocusBlockType) {
       return true;
-    } 
+    }
 
     // Text direction has changed for one or more blocks. We must re-render.
     if (prevDirectionMap !== nextDirectionMap) {
@@ -260,7 +264,7 @@ class DraftEditorContents extends React.Component<Props> {
     const outputBlocks = [];
     const headerBlocks = [];
     const footerBlocks = [];
-    for (let ii = 0; ii < processedBlocks.length; ) {
+    for (let ii = 0; ii < processedBlocks.length;) {
       const info = processedBlocks[ii];
       if (info.location === 'header') {
         headerBlocks.push(info.block);
